@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.0.2)
+project(UnicycleMotionControl)
+set(CMAKE_CXX_STANDARD 17)
+find_package(Eigen3 REQUIRED)
+include_directories(include)
+file(GLOB_RECURSE SOURCES "src/*.cpp")
+add_library(SimExt${PROJECT_NAME} SHARED ${SOURCES})
+target_link_libraries(SimExt${PROJECT_NAME} ${EIGEN3_LIBRARIES})
