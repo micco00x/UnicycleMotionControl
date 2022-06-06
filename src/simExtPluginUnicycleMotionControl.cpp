@@ -119,9 +119,15 @@ SIM_DLLEXPORT void* simMessage(int message,int* auxiliaryData,void* customData,i
         std::cerr << "Could not get object with object path " << right_motor_object_path << std::endl;
       }
 
+      const double wheel_radius = 0.09765;
+      const double dist_wheel_to_wheel = 0.330;
+
+      double linear_velocity = 0.1;
+      double angular_velocity = 0.0;
+
       // Unicycle to differential drive:
-      double left_motor_velocity = 10.0;
-      double right_motor_velocity = 0.0;
+      double left_motor_velocity  = linear_velocity / dist_wheel_to_wheel - dist_wheel_to_wheel * angular_velocity / (2.0 * wheel_radius);
+      double right_motor_velocity = linear_velocity / dist_wheel_to_wheel + dist_wheel_to_wheel * angular_velocity / (2.0 * wheel_radius);
 
       // Send commands to robot:
       simSetJointTargetVelocity(left_motor_handle, left_motor_velocity);
