@@ -13,34 +13,14 @@ UnicycleConfiguration::UnicycleConfiguration(
 
 }
 
-void
-UnicycleConfiguration::setX(double x) {
-  x_ = x;
-}
+double UnicycleConfiguration::x() const { return x_; }
+double& UnicycleConfiguration::x() { return x_; }
 
-void
-UnicycleConfiguration::setY(double y) {
-  y_ = y;
-}
+double UnicycleConfiguration::y() const { return y_; }
+double& UnicycleConfiguration::y() { return y_; }
 
-void
-UnicycleConfiguration::setTheta(double theta) {
-  theta_ = theta;
-}
+double UnicycleConfiguration::theta() const { return theta_; }
+double& UnicycleConfiguration::theta() { return theta_; }
 
-double
-UnicycleConfiguration::getX() const {
-  return x_;
-}
-
-double
-UnicycleConfiguration::getY() const {
-  return y_;
-}
-
-double
-UnicycleConfiguration::getTheta() const {
-  return theta_;
-}
 
 } // end namespace labrob

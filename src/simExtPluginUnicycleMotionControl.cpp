@@ -96,8 +96,6 @@ SIM_DLLEXPORT unsigned char simStart(void* reservedPointer,int reservedInt)
   // Register the new function:
   //simRegisterScriptCallbackFunction(strConCat(LUA_GETDATA_COMMAND,"@","PluginSkeleton"),strConCat("...=",LUA_GETDATA_COMMAND,"(string data1,map data2)"),LUA_GETDATA_CALLBACK);
 
-  init();
-
   return(PLUGIN_VERSION); // initialization went fine, we return the version number of this plugin (can be queried with simGetModuleName)
 }
 
@@ -117,6 +115,10 @@ SIM_DLLEXPORT void* simMessage(int message,int* auxiliaryData,void* customData,i
   // Here we can intercept many messages from CoppelisSim. Only the most important messages are listed here.
   // For a complete list of messages that you can intercept/react with, search for "sim_message_eventcallback"-type constants
   // in the CoppelisSim user manual.
+
+  if (message == sim_message_eventcallback_simulationabouttostart) {
+    init();
+  }
 
   if (message == sim_message_eventcallback_modulehandle) {
     update();

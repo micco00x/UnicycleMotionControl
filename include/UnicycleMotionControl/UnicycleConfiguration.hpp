@@ -7,13 +7,14 @@ class UnicycleConfiguration {
   UnicycleConfiguration();
   UnicycleConfiguration(double x, double y, double theta);
 
-  void setX(double x);
-  void setY(double y);
-  void setTheta(double theta);
+  double x() const;
+  double& x();
 
-  double getX() const;
-  double getY() const;
-  double getTheta() const;
+  double y() const;
+  double& y();
+
+  double theta() const;
+  double& theta();
   
  protected:
   double x_;
