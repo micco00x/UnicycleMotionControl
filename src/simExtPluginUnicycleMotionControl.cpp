@@ -1,6 +1,8 @@
 #include <UnicycleMotionControl/simExtPluginUnicycleMotionControl.h>
 #include <UnicycleMotionControl/simLib.h>
 
+#include <UnicycleMotionControl/DifferentialWheeledRobotCommand.hpp>
+
 #include <iostream>
 
 
@@ -25,6 +27,11 @@
 #define PLUGIN_VERSION 5 // 2 since version 3.2.1, 3 since V3.3.1, 4 since V3.4.0, 5 since V3.4.1
 
 static LIBRARY simLib; // the CoppelisSim library that we will dynamically load and bind
+
+const double p3dx_wheel_radius = 0.09765;
+const double p3dx_dist_wheel_to_wheel = 0.330;
+
+labrob::DifferentialWheeledRobotCommand p3dx_robot_cmd(p3dx_wheel_radius, p3dx_dist_wheel_to_wheel);
 
 // This is the plugin start routine (called just once, just after the plugin was loaded):
 SIM_DLLEXPORT unsigned char simStart(void* reservedPointer,int reservedInt)
@@ -119,19 +126,14 @@ SIM_DLLEXPORT void* simMessage(int message,int* auxiliaryData,void* customData,i
         std::cerr << "Could not get object with object path " << right_motor_object_path << std::endl;
       }
 
-      const double wheel_radius = 0.09765;
-      const double dist_wheel_to_wheel = 0.330;
-
       double linear_velocity = 0.1;
       double angular_velocity = 0.0;
 
-      // Unicycle to differential drive:
-      double left_motor_velocity  = linear_velocity / dist_wheel_to_wheel - dist_wheel_to_wheel * angular_velocity / (2.0 * wheel_radius);
-      double right_motor_velocity = linear_velocity / dist_wheel_to_wheel + dist_wheel_to_wheel * angular_velocity / (2.0 * wheel_radius);
+      p3dx_robot_cmd.setVelocitiesFromUnicycleCommand(linear_velocity, angular_velocity);
 
       // Send commands to robot:
-      simSetJointTargetVelocity(left_motor_handle, left_motor_velocity);
-      simSetJointTargetVelocity(right_motor_handle, right_motor_velocity);
+      simSetJointTargetVelocity(left_motor_handle, p3dx_robot_cmd.getLeftMotorVelocity());
+      simSetJointTargetVelocity(right_motor_handle, p3dx_robot_cmd.getRightMotorVelocity());
     }
 
     return(retVal);
