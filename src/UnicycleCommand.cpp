@@ -3,37 +3,37 @@
 namespace labrob {
 
 UnicycleCommand::UnicycleCommand()
-  : linear_velocity_(0.0),
-    angular_velocity_(0.0) {
+  : driving_velocity_(0.0),
+    steering_velocity_(0.0) {
 
 }
 
 UnicycleCommand::UnicycleCommand(
-    double linear_velocity,
-    double angular_velocity)
-  : linear_velocity_(linear_velocity),
-    angular_velocity_(angular_velocity) {
+    double driving_velocity,
+    double steering_velocity)
+  : driving_velocity_(driving_velocity),
+    steering_velocity_(steering_velocity) {
 
 }
 
 void
-UnicycleCommand::setLinearVelocity(double linear_velocity) {
-  linear_velocity_ = linear_velocity;
+UnicycleCommand::setDrivingVelocity(double driving_velocity) {
+  driving_velocity_ = driving_velocity;
 }
 
 void
-UnicycleCommand::setAngularVelocity(double angular_velocity) {
-  angular_velocity_ = angular_velocity;
+UnicycleCommand::setSteeringVelocity(double steering_velocity) {
+  steering_velocity_ = steering_velocity;
 }
 
 double
-UnicycleCommand::getLinearVelocity() const {
-  return linear_velocity_;
+UnicycleCommand::getDrivingVelocity() const {
+  return driving_velocity_;
 }
 
 double
-UnicycleCommand::getAngularVelocity() const {
-  return angular_velocity_;
+UnicycleCommand::getSteeringVelocity() const {
+  return steering_velocity_;
 }
 
 } // end namespace labrob

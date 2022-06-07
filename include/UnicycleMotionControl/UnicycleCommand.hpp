@@ -5,18 +5,18 @@ namespace labrob {
 class UnicycleCommand {
  public:
   UnicycleCommand();
-  UnicycleCommand(double linar_velocity, double angular_velocity);
+  UnicycleCommand(double driving_velocity, double steering_velocity);
 
 
-  void setLinearVelocity(double linear_velocity);
-  void setAngularVelocity(double angular_velocity);
+  void setDrivingVelocity(double driving_velocity);
+  void setSteeringVelocity(double steering_velocity);
 
-  double getLinearVelocity() const;
-  double getAngularVelocity() const;
+  double getDrivingVelocity() const;
+  double getSteeringVelocity() const;
 
  protected:
-  double linear_velocity_;
-  double angular_velocity_;
+  double driving_velocity_;
+  double steering_velocity_;
 
 }; // end class UnicycleCommand
 

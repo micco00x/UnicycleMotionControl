@@ -25,10 +25,10 @@ DifferentialWheeledRobotCommand::setRightMotorVelocity(double right_motor_veloci
 void
 DifferentialWheeledRobotCommand::setVelocitiesFromUnicycleCommand(
     labrob::UnicycleCommand unicycle_command) {
-  double linear_velocity = unicycle_command.getLinearVelocity();
-  double angular_velocity = unicycle_command.getAngularVelocity();
-  left_motor_velocity_  = linear_velocity / dist_wheel_to_wheel_ - dist_wheel_to_wheel_ * angular_velocity / (2.0 * wheel_radius_);
-  right_motor_velocity_ = linear_velocity / dist_wheel_to_wheel_ + dist_wheel_to_wheel_ * angular_velocity / (2.0 * wheel_radius_);
+  double driving_velocity = unicycle_command.getDrivingVelocity();
+  double steering_velocity = unicycle_command.getSteeringVelocity();
+  left_motor_velocity_  = driving_velocity / dist_wheel_to_wheel_ - dist_wheel_to_wheel_ * steering_velocity / (2.0 * wheel_radius_);
+  right_motor_velocity_ = driving_velocity / dist_wheel_to_wheel_ + dist_wheel_to_wheel_ * steering_velocity / (2.0 * wheel_radius_);
 }
 
 double

@@ -148,9 +148,9 @@ SIM_DLLEXPORT void* simMessage(int message,int* auxiliaryData,void* customData,i
           << p3dx_configuration.getY() << ", "
           << p3dx_configuration.getTheta() << std::endl;
 
-      double linear_velocity = 0.1;
-      double angular_velocity = 0.0;
-      labrob::UnicycleCommand unicycle_cmd(linear_velocity, angular_velocity);
+      double driving_velocity = 0.1;
+      double steering_velocity = 0.0;
+      labrob::UnicycleCommand unicycle_cmd(driving_velocity, steering_velocity);
 
       p3dx_robot_cmd.setVelocitiesFromUnicycleCommand(unicycle_cmd);
 
