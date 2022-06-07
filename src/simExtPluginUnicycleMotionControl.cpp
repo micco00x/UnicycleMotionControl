@@ -128,8 +128,9 @@ SIM_DLLEXPORT void* simMessage(int message,int* auxiliaryData,void* customData,i
 
       double linear_velocity = 0.1;
       double angular_velocity = 0.0;
+      labrob::UnicycleCommand unicycle_cmd(linear_velocity, angular_velocity);
 
-      p3dx_robot_cmd.setVelocitiesFromUnicycleCommand(linear_velocity, angular_velocity);
+      p3dx_robot_cmd.setVelocitiesFromUnicycleCommand(unicycle_cmd);
 
       // Send commands to robot:
       simSetJointTargetVelocity(left_motor_handle, p3dx_robot_cmd.getLeftMotorVelocity());

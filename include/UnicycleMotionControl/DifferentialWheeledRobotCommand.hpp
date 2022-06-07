@@ -1,5 +1,7 @@
 #pragma once
 
+#include <UnicycleMotionControl/UnicycleCommand.hpp>
+
 namespace labrob {
 
 class DifferentialWheeledRobotCommand {
@@ -10,8 +12,7 @@ class DifferentialWheeledRobotCommand {
   void setRightMotorVelocity(double right_motor_velocity);
 
   void setVelocitiesFromUnicycleCommand(
-      double linear_velocity,
-      double angular_velocity
+    labrob::UnicycleCommand unicycle_command
   );
 
   double getLeftMotorVelocity() const;
