@@ -1,8 +1,10 @@
 #include <UnicycleMotionControl/CoppeliaSimP3DXController.hpp>
+#include <UnicycleMotionControl/CircularTrajectory.hpp>
 #include <UnicycleMotionControl/SquaredTrajectoryWithConstantDrivingVelocity.hpp>
 #include <UnicycleMotionControl/UnicycleConfiguration.hpp>
 #include <UnicycleMotionControl/unicycle_controllers.hpp>
 
+#include <cmath>
 #include <filesystem>
 #include <iostream>
 
@@ -68,6 +70,14 @@ CoppeliaSimP3DXController::init() {
           labrob::Pose2D(1.0, 0.5, 0.0),
           desired_driving_velocity,
           square_length
+      );
+
+  desired_trajectory_ptr_ =
+      std::make_unique<labrob::CircularTrajectory>(
+          labrob::Position2D(1.0, 3.0),
+          3.0,
+          desired_driving_velocity,
+          -M_PI / 2.0
       );
 
   static_feedback_linearization_hparams_.b = 0.75;
