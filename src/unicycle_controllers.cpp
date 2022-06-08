@@ -16,10 +16,6 @@ void staticFeedbackLinearizationControl(
   labrob::Position2D desired_position = desired_trajectory.eval(time);
   labrob::Velocity2D desired_velocity = desired_trajectory.eval_dt(time);
 
-  std::cerr << "t=" << time << std::endl;
-  std::cerr << "\tdesired position: (" << desired_position.x() << ", " << desired_position.y() << ")" << std::endl;
-  std::cerr << "\tdesired velocity: (" << desired_velocity.x() << ", " << desired_velocity.y() << ")" << std::endl;
-
   double xd = desired_position.x();
   double yd = desired_position.y();
   double xd_dot = desired_velocity.x();
@@ -45,9 +41,6 @@ void staticFeedbackLinearizationControl(
 
   command.setDrivingVelocity(driving_velocity);
   command.setSteeringVelocity(steering_velocity);
-
-  std::cerr << "v: " << driving_velocity << std::endl;
-  std::cerr << "omega: " << steering_velocity << std::endl;
 }
 
 } // end namespace labrob

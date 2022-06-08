@@ -1,5 +1,6 @@
 #pragma once
 
+#include <fstream>
 #include <memory>
 
 #include <UnicycleMotionControl/CoppeliaSimController.hpp>
@@ -31,6 +32,12 @@ class CoppeliaSimP3DXController : public CoppeliaSimController {
   std::unique_ptr<labrob::UnicycleTrajectory> desired_trajectory_ptr_;
 
   labrob::StaticFeedbackLinearizationHParams static_feedback_linearization_hparams_;
+
+ private:
+  std::ofstream time_log_file_;
+  std::ofstream unicycle_cmd_log_file_;
+  std::ofstream unicycle_configuration_log_file_;
+  std::ofstream unicycle_desired_position_log_file_;
 
 }; // end class CoppeliaSimP3DXController
 
