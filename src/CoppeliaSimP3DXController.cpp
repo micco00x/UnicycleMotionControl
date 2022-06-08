@@ -21,11 +21,13 @@ CoppeliaSimP3DXController::CoppeliaSimP3DXController()
     std::filesystem::path time_log_file_path = root_folder / "time_log.txt";
     std::filesystem::path unicycle_cmd_log_file_path = root_folder / "unicycle_cmd_log.txt";
     std::filesystem::path unicycle_configuration_log_file_path = root_folder / "unicycle_configuration_log.txt";
-    std::filesystem::path unicycle_desired_position_log_file_path = root_folder / "unicycle_desired_position_log.txt";
+    std::filesystem::path unicycle_desired_pose_log_file_path = root_folder / "unicycle_desired_pose_log.txt";
+    std::filesystem::path unicycle_desired_velocity_log_file_path = root_folder / "unicycle_desired_velocity_log.txt";
     time_log_file_.open(time_log_file_path);
     unicycle_cmd_log_file_.open(unicycle_cmd_log_file_path);
     unicycle_configuration_log_file_.open(unicycle_configuration_log_file_path);
-    unicycle_desired_position_log_file_.open(unicycle_desired_position_log_file_path);
+    unicycle_desired_pose_log_file_.open(unicycle_desired_pose_log_file_path);
+    unicycle_desired_velocity_log_file_.open(unicycle_desired_velocity_log_file_path);
   } else {
     std::cerr << "Cannot create directory " << root_folder << std::endl;
   }
@@ -111,11 +113,19 @@ CoppeliaSimP3DXController::update() {
         << p3dx_configuration.y() << " "
         << p3dx_configuration.theta() << std::endl;
   }
-  if (unicycle_desired_position_log_file_.is_open()) {
-    labrob::Position2D desired_position = desired_trajectory_ptr_->eval(time);
-    unicycle_desired_position_log_file_
-        << desired_position.x() << " "
-        << desired_position.y() << std::endl;
+  if (unicycle_desired_pose_log_file_.is_open()) {
+    labrob::Pose2D desired_pose = desired_trajectory_ptr_->eval(time);
+    unicycle_desired_pose_log_file_
+        << desired_pose.x() << " "
+        << desired_pose.y() << " "
+        << desired_pose.theta() << std::endl;
+  }
+  if (unicycle_desired_velocity_log_file_.is_open()) {
+    labrob::Pose2DDerivative desired_velocity = desired_trajectory_ptr_->eval_dt(time);
+    unicycle_desired_velocity_log_file_
+        << desired_velocity.x_dot() << " "
+        << desired_velocity.y_dot() << " "
+        << desired_velocity.theta_dot() << std::endl;
   }
 }
 

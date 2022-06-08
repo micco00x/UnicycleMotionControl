@@ -13,18 +13,20 @@ void staticFeedbackLinearizationControl(
     labrob::UnicycleCommand& command
 ) {
 
-  labrob::Position2D desired_position = desired_trajectory.eval(time);
-  labrob::Velocity2D desired_velocity = desired_trajectory.eval_dt(time);
+  labrob::Pose2D desired_pose = desired_trajectory.eval(time);
+  labrob::Pose2DDerivative desired_velocity = desired_trajectory.eval_dt(time);
 
-  double xd = desired_position.x();
-  double yd = desired_position.y();
-  double xd_dot = desired_velocity.x();
-  double yd_dot = desired_velocity.y();
+  double xd = desired_pose.x();
+  double yd = desired_pose.y();
+  double thetad = desired_pose.theta();
+  double xd_dot = desired_velocity.x_dot();
+  double yd_dot = desired_velocity.y_dot();
+  double thetad_dot = desired_velocity.theta_dot();
 
-  double r1d = xd;
-  double r2d = yd;
-  double r1d_dot = xd_dot;
-  double r2d_dot = yd_dot;
+  double r1d = xd + hparams.b * std::cos(thetad);
+  double r2d = yd + hparams.b * std::sin(thetad);
+  double r1d_dot = xd_dot - hparams.b * thetad_dot * std::sin(thetad);
+  double r2d_dot = yd_dot + hparams.b * thetad_dot * std::cos(thetad);
 
   double x = configuration.x();
   double y = configuration.y();

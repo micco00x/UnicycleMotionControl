@@ -37,7 +37,8 @@ class CoppeliaSimP3DXController : public CoppeliaSimController {
   std::ofstream time_log_file_;
   std::ofstream unicycle_cmd_log_file_;
   std::ofstream unicycle_configuration_log_file_;
-  std::ofstream unicycle_desired_position_log_file_;
+  std::ofstream unicycle_desired_pose_log_file_;
+  std::ofstream unicycle_desired_velocity_log_file_;
 
 }; // end class CoppeliaSimP3DXController
 

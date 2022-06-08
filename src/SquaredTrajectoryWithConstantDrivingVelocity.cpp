@@ -11,6 +11,8 @@ SquaredTrajectoryWithConstantDrivingVelocity::SquaredTrajectoryWithConstantDrivi
     double square_length) {
 
   vd_ = desired_driving_velocity;
+  omegad_ = 0.0; // assume desired steering velocity is zero
+
   double l = square_length;
 
   x0_ = initial_configuration.x();
@@ -36,10 +38,13 @@ SquaredTrajectoryWithConstantDrivingVelocity::SquaredTrajectoryWithConstantDrivi
   t4_ = t3_ + side_to_side_time;
 }
 
-labrob::Position2D
+labrob::Pose2D
 SquaredTrajectoryWithConstantDrivingVelocity::eval(double time) const {
+  auto qd_dot = eval_dt(time);
+
   double xd;
   double yd;
+  double thetad = std::atan2(qd_dot.y_dot(), qd_dot.x_dot());
 
   if (time < t0_) {
     xd = x0_;
@@ -61,13 +66,14 @@ SquaredTrajectoryWithConstantDrivingVelocity::eval(double time) const {
     yd = y0_;
   }
 
-  return labrob::Position2D(xd, yd);
+  return labrob::Pose2D(xd, yd, thetad);
 }
 
-labrob::Velocity2D
+labrob::Pose2DDerivative
 SquaredTrajectoryWithConstantDrivingVelocity::eval_dt(double time) const {
   double xd_dot;
   double yd_dot;
+  double thetad_dot = omegad_;
 
   if (time < t0_) {
     xd_dot = 0.0;
@@ -89,7 +95,7 @@ SquaredTrajectoryWithConstantDrivingVelocity::eval_dt(double time) const {
     yd_dot = 0.0;
   }
 
-  return labrob::Velocity2D(xd_dot, yd_dot);
+  return labrob::Pose2DDerivative(xd_dot, yd_dot, thetad_dot);
 }
 
 } // end namespace labrob

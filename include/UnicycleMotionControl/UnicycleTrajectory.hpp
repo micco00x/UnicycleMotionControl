@@ -7,8 +7,8 @@ namespace labrob {
 
 class UnicycleTrajectory {
  public:
-  virtual labrob::Position2D eval(double time) const = 0;
-  virtual labrob::Velocity2D eval_dt(double time) const = 0;
+  virtual labrob::Pose2D eval(double time) const = 0;
+  virtual labrob::Pose2DDerivative eval_dt(double time) const = 0;
 
 }; // end class UnicycleTrajectory
 

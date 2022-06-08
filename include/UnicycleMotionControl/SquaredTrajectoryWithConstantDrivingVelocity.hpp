@@ -14,11 +14,11 @@ class SquaredTrajectoryWithConstantDrivingVelocity : public UnicycleTrajectory {
       double square_length
   );
 
-  labrob::Position2D eval(double time) const override;
-  labrob::Velocity2D eval_dt(double time) const override;
+  labrob::Pose2D eval(double time) const override;
+  labrob::Pose2DDerivative eval_dt(double time) const override;
 
  protected:
-  double vd_;
+  double vd_, omegad_;
   double x0_, y0_, theta0_;
   double x1_, y1_, theta1_;
   double x2_, y2_, theta2_;
