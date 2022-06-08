@@ -64,6 +64,7 @@ SquaredTrajectoryWithConstantDrivingVelocity::eval(double time) const {
   } else {
     xd = x0_;
     yd = y0_;
+    thetad = theta3_;
   }
 
   return labrob::Pose2D(xd, yd, thetad);
