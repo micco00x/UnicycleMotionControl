@@ -22,11 +22,13 @@ CoppeliaSimP3DXController::CoppeliaSimP3DXController()
     std::filesystem::path unicycle_cmd_log_file_path = root_folder / "unicycle_cmd_log.txt";
     std::filesystem::path unicycle_configuration_log_file_path = root_folder / "unicycle_configuration_log.txt";
     std::filesystem::path unicycle_desired_pose_log_file_path = root_folder / "unicycle_desired_pose_log.txt";
+    std::filesystem::path unicycle_measured_velocity_log_file_path = root_folder / "unicycle_measured_velocity_log.txt";
     std::filesystem::path unicycle_desired_velocity_log_file_path = root_folder / "unicycle_desired_velocity_log.txt";
     time_log_file_.open(time_log_file_path);
     unicycle_cmd_log_file_.open(unicycle_cmd_log_file_path);
     unicycle_configuration_log_file_.open(unicycle_configuration_log_file_path);
     unicycle_desired_pose_log_file_.open(unicycle_desired_pose_log_file_path);
+    unicycle_measured_velocity_log_file_.open(unicycle_measured_velocity_log_file_path);
     unicycle_desired_velocity_log_file_.open(unicycle_desired_velocity_log_file_path);
   } else {
     std::cerr << "Cannot create directory " << root_folder << std::endl;
@@ -60,7 +62,7 @@ CoppeliaSimP3DXController::init() {
   // Setup data for liner controller using input-outpu linearization via static feedback:
   labrob::UnicycleConfiguration initial_configuration = retrieveP3DXConfiguration();
 
-  double desired_driving_velocity = 1.0;
+  double desired_driving_velocity = 0.4;
   double square_length = 4.0;
 
   desired_trajectory_ptr_ =
@@ -72,8 +74,8 @@ CoppeliaSimP3DXController::init() {
       );
 
   static_feedback_linearization_hparams_.b = 0.75;
-  static_feedback_linearization_hparams_.k1 = 2.0;
-  static_feedback_linearization_hparams_.k2 = 2.0;
+  static_feedback_linearization_hparams_.k1 = 1.0;
+  static_feedback_linearization_hparams_.k2 = 1.0;
 }
 
 void
@@ -120,6 +122,13 @@ CoppeliaSimP3DXController::update() {
         << desired_pose.y() << " "
         << desired_pose.theta() << std::endl;
   }
+  if (unicycle_measured_velocity_log_file_.is_open()) {
+    labrob::Pose2DDerivative measured_velocity = retrieveP3DXVelocity();
+    unicycle_measured_velocity_log_file_
+        << measured_velocity.x_dot() << " "
+        << measured_velocity.y_dot() << " "
+        << measured_velocity.theta_dot() << std::endl;
+  }
   if (unicycle_desired_velocity_log_file_.is_open()) {
     labrob::Pose2DDerivative desired_velocity = desired_trajectory_ptr_->eval_dt(time);
     unicycle_desired_velocity_log_file_
@@ -138,6 +147,17 @@ CoppeliaSimP3DXController::retrieveP3DXConfiguration() {
 
   return labrob::UnicycleConfiguration(
       p3dx_position[0], p3dx_position[1], p3dx_orientation[2]
+  );
+}
+
+labrob::Pose2DDerivative
+CoppeliaSimP3DXController::retrieveP3DXVelocity() {
+  simFloat p3dx_linear_velocity[3];
+  simFloat p3dx_angular_velocity[3];
+  simGetObjectVelocity(p3dx_handle_, p3dx_linear_velocity, p3dx_angular_velocity);
+
+  return labrob::Pose2DDerivative(
+      p3dx_linear_velocity[0], p3dx_linear_velocity[1], p3dx_angular_velocity[2]
   );
 }
 

@@ -29,12 +29,14 @@ if __name__ == '__main__':
     unicycle_cmd_log_path = os.path.join(root_folder, "unicycle_cmd_log.txt")
     unicycle_configuration_log_path = os.path.join(root_folder, "unicycle_configuration_log.txt")
     unicycle_desired_pose_log_path = os.path.join(root_folder, "unicycle_desired_pose_log.txt")
+    unicycle_measured_velocity_log_path = os.path.join(root_folder, "unicycle_measured_velocity_log.txt")
     unicycle_desired_velocity_log_path = os.path.join(root_folder, "unicycle_desired_velocity_log.txt")
 
     time_data = []
     command_data = []
     configuration_data = []
     desired_pose_data = []
+    measured_velocity_data = []
     desired_velocity_data = []
 
     # Read time:
@@ -69,6 +71,15 @@ if __name__ == '__main__':
             y = float(data[1])
             theta = float(data[2])
             desired_pose_data.append(UnicycleConfiguration(x, y, theta))
+
+    # Read unicycle measured velocities:
+    with open(unicycle_measured_velocity_log_path) as unicycle_measured_velocity_file:
+        for l in unicycle_measured_velocity_file.readlines():
+            data = l.rstrip().split()
+            x_dot = float(data[0])
+            y_dot = float(data[1])
+            theta_dot = float(data[2])
+            measured_velocity_data.append(UnicycleVelocity(x_dot, y_dot, theta_dot))
 
     # Read unicycle desired velocities:
     with open(unicycle_desired_velocity_log_path) as unicycle_desired_velocity_file:
@@ -130,6 +141,7 @@ if __name__ == '__main__':
     ax_pos_x_dot = fig_velocities.add_subplot(3, 1, 1)
     ax_pos_x_dot.set_xlabel('[s]')
     ax_pos_x_dot.set_ylabel('[m/s]')
+    ax_pos_x_dot.plot(time_data, [q_dot.x_dot for q_dot in measured_velocity_data], label='x_dot')
     ax_pos_x_dot.plot(time_data, [q_dot.x_dot for q_dot in desired_velocity_data], label='x_dot des')
     ax_pos_x_dot.legend()
     ax_pos_x_dot.grid()
@@ -137,6 +149,7 @@ if __name__ == '__main__':
     ax_pos_y_dot = fig_velocities.add_subplot(3, 1, 2)
     ax_pos_y_dot.set_xlabel('[s]')
     ax_pos_y_dot.set_ylabel('[m/s]')
+    ax_pos_y_dot.plot(time_data, [q_dot.y_dot for q_dot in measured_velocity_data], label='y_dot')
     ax_pos_y_dot.plot(time_data, [q_dot.y_dot for q_dot in desired_velocity_data], label='y_dot des')
     ax_pos_y_dot.legend()
     ax_pos_y_dot.grid()
@@ -144,6 +157,7 @@ if __name__ == '__main__':
     ax_pos_theta_dot = fig_velocities.add_subplot(3, 1, 3)
     ax_pos_theta_dot.set_xlabel('[s]')
     ax_pos_theta_dot.set_ylabel('[rad/s]')
+    ax_pos_theta_dot.plot(time_data, [q_dot.theta_dot for q_dot in measured_velocity_data], label='theta_dot')
     ax_pos_theta_dot.plot(time_data, [q_dot.theta_dot for q_dot in desired_velocity_data], label='theta_dot des')
     ax_pos_theta_dot.legend()
     ax_pos_theta_dot.grid()
