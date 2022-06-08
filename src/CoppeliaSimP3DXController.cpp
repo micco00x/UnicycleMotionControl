@@ -79,7 +79,7 @@ void
 CoppeliaSimP3DXController::update() {
   double time = static_cast<double>(simGetSimulationTime());
 
-  labrob::UnicycleConfiguration p3dx_configuration = retrieveP3DXConfiguration();
+  labrob::UnicycleConfiguration p3dx_configuration = retrieveP3DXCorrespondingUnicycle();
 
   labrob::UnicycleCommand unicycle_cmd;
 
@@ -136,14 +136,22 @@ CoppeliaSimP3DXController::update() {
 }
 
 labrob::UnicycleConfiguration
-CoppeliaSimP3DXController::retrieveP3DXConfiguration() {
-  simFloat p3dx_position[3];
+CoppeliaSimP3DXController::retrieveP3DXCorrespondingUnicycle() {
   simFloat p3dx_orientation[3];
-  simGetObjectPosition(p3dx_handle_, -1, p3dx_position);
   simGetObjectOrientation(p3dx_handle_, -1, p3dx_orientation);
 
+  // NOTE: center of the P3DX is not the center of the unicycle: it is
+  //       the center between the two wheels; the orientation is instead the
+  //       same so it is safe to use the orientation of the robot.
+  simFloat left_motor_position[3];
+  simFloat right_motor_position[3];
+  simGetObjectPosition(left_motor_handle_, -1, left_motor_position);
+  simGetObjectPosition(right_motor_handle_, -1, right_motor_position);
+
   return labrob::UnicycleConfiguration(
-      p3dx_position[0], p3dx_position[1], p3dx_orientation[2]
+      (left_motor_position[0] + right_motor_position[0]) / 2.0,
+      (left_motor_position[1] + right_motor_position[1]) / 2.0,
+      p3dx_orientation[2]
   );
 }
 

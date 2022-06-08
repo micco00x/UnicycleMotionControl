@@ -18,7 +18,7 @@ class CoppeliaSimP3DXController : public CoppeliaSimController {
   void update() override;
 
  protected:
-  labrob::UnicycleConfiguration retrieveP3DXConfiguration();
+  labrob::UnicycleConfiguration retrieveP3DXCorrespondingUnicycle();
   labrob::Pose2DDerivative retrieveP3DXVelocity();
 
   simInt p3dx_handle_;
