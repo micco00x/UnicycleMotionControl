@@ -62,30 +62,8 @@ CoppeliaSimP3DXController::init() {
     std::cerr << "Could not get object with object path " << right_motor_object_path << std::endl;
   }
 
-  double desired_driving_velocity = 0.4;
-  double square_length = 4.0;
-
-  desired_trajectory_ptr_ =
-      std::make_unique<labrob::SquaredTrajectoryWithConstantDrivingVelocity>(
-          static_cast<double>(simGetSimulationTime()),
-          labrob::Pose2D(1.0, 0.5, 0.0),
-          desired_driving_velocity,
-          square_length
-      );
-
-  desired_trajectory_ptr_ =
-      std::make_unique<labrob::CircularTrajectory>(
-          labrob::Position2D(1.0, 3.0),
-          3.0,
-          desired_driving_velocity,
-          -M_PI / 2.0
-      );
-  
-  double desired_steering_velocity = 0.06;
-
-  desired_trajectory_ptr_ = std::make_unique<labrob::EightShapedTrajectory>(
-      desired_steering_velocity
-  );
+  TrajectoryType trajectory_type = TrajectoryType::Squared;
+  desired_trajectory_ptr_ = generateDesiredTrajectory(trajectory_type);
 
   static_feedback_linearization_hparams_.b = 0.75;
   static_feedback_linearization_hparams_.k1 = 1.0;
@@ -190,6 +168,38 @@ CoppeliaSimP3DXController::retrieveP3DXVelocity() {
       (left_motor_linear_velocity[1] + right_motor_linear_velocity[1]) / 2.0,
       p3dx_angular_velocity[2]
   );
+}
+
+std::unique_ptr<labrob::UnicycleTrajectory>
+CoppeliaSimP3DXController::generateDesiredTrajectory(
+    TrajectoryType trajectory_type
+) {
+  if (trajectory_type == TrajectoryType::Circular) {
+    double desired_driving_velocity = 0.4;
+    return std::make_unique<labrob::CircularTrajectory>(
+        labrob::Position2D(1.0, 3.0),
+        3.0,
+        desired_driving_velocity,
+        -M_PI / 2.0
+      );
+  } else if (trajectory_type == TrajectoryType::EightShaped) {
+    double desired_steering_velocity = 0.06;
+
+    return std::make_unique<labrob::EightShapedTrajectory>(
+        desired_steering_velocity
+    );
+  } else if (trajectory_type == TrajectoryType::Squared) {
+    double desired_driving_velocity = 0.4;
+    double square_length = 4.0;
+    return
+        std::make_unique<labrob::SquaredTrajectoryWithConstantDrivingVelocity>(
+            static_cast<double>(simGetSimulationTime()),
+            labrob::Pose2D(1.0, 0.5, 0.0),
+            desired_driving_velocity,
+            square_length
+        );
+  }
+  return nullptr;
 }
 
 

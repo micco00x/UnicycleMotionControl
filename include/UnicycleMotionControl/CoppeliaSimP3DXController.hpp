@@ -42,6 +42,12 @@ class CoppeliaSimP3DXController : public CoppeliaSimController {
   std::ofstream unicycle_measured_velocity_log_file_;
   std::ofstream unicycle_desired_velocity_log_file_;
 
+  enum class TrajectoryType { Circular, EightShaped, Squared };
+
+  std::unique_ptr<labrob::UnicycleTrajectory> generateDesiredTrajectory(
+      TrajectoryType trajectory_type
+  );
+
 }; // end class CoppeliaSimP3DXController
 
 } // end namespace labrob
