@@ -11,7 +11,6 @@ SquaredTrajectoryWithConstantDrivingVelocity::SquaredTrajectoryWithConstantDrivi
     double square_length) {
 
   vd_ = desired_driving_velocity;
-  omegad_ = 0.0; // assume desired steering velocity is zero
 
   double l = square_length;
 
@@ -44,6 +43,7 @@ SquaredTrajectoryWithConstantDrivingVelocity::eval(double time) const {
 
   double xd;
   double yd;
+  // Using flat outputs:
   double thetad = std::atan2(qd_dot.y_dot(), qd_dot.x_dot());
 
   if (time < t0_) {
@@ -74,7 +74,8 @@ labrob::Pose2DDerivative
 SquaredTrajectoryWithConstantDrivingVelocity::eval_dt(double time) const {
   double xd_dot;
   double yd_dot;
-  double thetad_dot = omegad_;
+  // Using flat outputs (NOTE: it is zero because \ddot{x}, \ddot{y} = 0):
+  double thetad_dot = 0.0; // 
 
   if (time < t0_) {
     xd_dot = 0.0;
