@@ -1,5 +1,6 @@
 #include <UnicycleMotionControl/CoppeliaSimP3DXController.hpp>
 #include <UnicycleMotionControl/CircularTrajectory.hpp>
+#include <UnicycleMotionControl/EightShapedTrajectory.hpp>
 #include <UnicycleMotionControl/SquaredTrajectoryWithConstantDrivingVelocity.hpp>
 #include <UnicycleMotionControl/UnicycleConfiguration.hpp>
 #include <UnicycleMotionControl/unicycle_controllers.hpp>
@@ -79,6 +80,12 @@ CoppeliaSimP3DXController::init() {
           desired_driving_velocity,
           -M_PI / 2.0
       );
+  
+  double desired_steering_velocity = 0.06;
+
+  desired_trajectory_ptr_ = std::make_unique<labrob::EightShapedTrajectory>(
+      desired_steering_velocity
+  );
 
   static_feedback_linearization_hparams_.b = 0.75;
   static_feedback_linearization_hparams_.k1 = 1.0;
