@@ -157,12 +157,21 @@ CoppeliaSimP3DXController::retrieveP3DXCorrespondingUnicycle() {
 
 labrob::Pose2DDerivative
 CoppeliaSimP3DXController::retrieveP3DXVelocity() {
+  // NOTE: assume angular velocity of unicycle is the same as the center
+  //       of the robot.
   simFloat p3dx_linear_velocity[3];
   simFloat p3dx_angular_velocity[3];
   simGetObjectVelocity(p3dx_handle_, p3dx_linear_velocity, p3dx_angular_velocity);
 
+  simFloat left_motor_linear_velocity[3];
+  simFloat right_motor_linear_velocity[3];
+  simGetObjectVelocity(left_motor_handle_, left_motor_linear_velocity, nullptr);
+  simGetObjectVelocity(right_motor_handle_, right_motor_linear_velocity, nullptr);
+
   return labrob::Pose2DDerivative(
-      p3dx_linear_velocity[0], p3dx_linear_velocity[1], p3dx_angular_velocity[2]
+      (left_motor_linear_velocity[0] + right_motor_linear_velocity[0]) / 2.0,
+      (left_motor_linear_velocity[1] + right_motor_linear_velocity[1]) / 2.0,
+      p3dx_angular_velocity[2]
   );
 }
 
