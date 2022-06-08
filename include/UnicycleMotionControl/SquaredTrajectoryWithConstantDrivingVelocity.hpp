@@ -9,7 +9,7 @@ class SquaredTrajectoryWithConstantDrivingVelocity : public UnicycleTrajectory {
  public:
   SquaredTrajectoryWithConstantDrivingVelocity(
       double t0,
-      const labrob::UnicycleConfiguration& initial_configuration,
+      const labrob::Pose2D& square_frame,
       double desired_driving_velocity,
       double square_length
   );

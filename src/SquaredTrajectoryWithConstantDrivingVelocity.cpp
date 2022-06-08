@@ -6,7 +6,7 @@ namespace labrob {
 
 SquaredTrajectoryWithConstantDrivingVelocity::SquaredTrajectoryWithConstantDrivingVelocity(
     double t0,
-    const labrob::UnicycleConfiguration& initial_configuration,
+    const labrob::Pose2D& square_frame,
     double desired_driving_velocity,
     double square_length) {
 
@@ -14,10 +14,10 @@ SquaredTrajectoryWithConstantDrivingVelocity::SquaredTrajectoryWithConstantDrivi
 
   double l = square_length;
 
-  x0_ = initial_configuration.x();
-  y0_ = initial_configuration.y();
+  x0_ = square_frame.x();
+  y0_ = square_frame.y();
 
-  theta0_ = initial_configuration.theta();
+  theta0_ = square_frame.theta();
   theta1_ = theta0_ + M_PI * 0.5;
   theta2_ = theta0_ + M_PI;
   theta3_ = theta0_ + M_PI * 1.5;

@@ -59,16 +59,13 @@ CoppeliaSimP3DXController::init() {
     std::cerr << "Could not get object with object path " << right_motor_object_path << std::endl;
   }
 
-  // Setup data for liner controller using input-outpu linearization via static feedback:
-  labrob::UnicycleConfiguration initial_configuration = retrieveP3DXConfiguration();
-
   double desired_driving_velocity = 0.4;
   double square_length = 4.0;
 
   desired_trajectory_ptr_ =
       std::make_unique<labrob::SquaredTrajectoryWithConstantDrivingVelocity>(
           static_cast<double>(simGetSimulationTime()),
-          initial_configuration,
+          labrob::Pose2D(1.0, 0.5, 0.0),
           desired_driving_velocity,
           square_length
       );
