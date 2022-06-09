@@ -7,6 +7,7 @@
 #include <UnicycleMotionControl/DifferentialWheeledRobotCommand.hpp>
 #include <UnicycleMotionControl/DynamicFeedbackLinearizationController.hpp>
 #include <UnicycleMotionControl/hparams.hpp>
+#include <UnicycleMotionControl/StaticFeedbackLinearizationController.hpp>
 #include <UnicycleMotionControl/UnicycleTrajectory.hpp>
 
 namespace labrob {
@@ -33,10 +34,9 @@ class CoppeliaSimP3DXController : public CoppeliaSimController {
 
   std::unique_ptr<labrob::UnicycleTrajectory> desired_trajectory_ptr_;
 
-  labrob::StaticFeedbackLinearizationHParams static_feedback_linearization_hparams_;
-
-  labrob::DynamicFeedbackLinearizationHparams dynamic_feedback_linearization_hparams_;
+  // TODO: add mother class and use polymorphism here.
   std::unique_ptr<labrob::DynamicFeedbackLinearizationController> dynamic_feedback_linearization_controller_ptr_;
+  std::unique_ptr<labrob::StaticFeedbackLinearizationController> static_feedback_linearization_controller_ptr_;
 
  private:
   std::ofstream time_log_file_;

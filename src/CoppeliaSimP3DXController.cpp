@@ -3,7 +3,6 @@
 #include <UnicycleMotionControl/EightShapedTrajectory.hpp>
 #include <UnicycleMotionControl/SquaredTrajectoryWithConstantDrivingVelocity.hpp>
 #include <UnicycleMotionControl/UnicycleConfiguration.hpp>
-#include <UnicycleMotionControl/unicycle_controllers.hpp>
 
 #include <cmath>
 #include <filesystem>
@@ -65,26 +64,31 @@ CoppeliaSimP3DXController::init() {
   TrajectoryType trajectory_type = TrajectoryType::Circular;
   desired_trajectory_ptr_ = generateDesiredTrajectory(trajectory_type);
 
-  // Setup hparams for static feedback linearization and linear controller:
-  static_feedback_linearization_hparams_.b = 0.75;
-  static_feedback_linearization_hparams_.k1 = 1.0;
-  static_feedback_linearization_hparams_.k2 = 1.0;
-
-  // Setup hparams for dynamic feedback linearization and PD controller:
-  dynamic_feedback_linearization_hparams_.kp1 = 4.0;
-  dynamic_feedback_linearization_hparams_.kp2 = 4.0;
-  dynamic_feedback_linearization_hparams_.kd1 = 4.0;
-  dynamic_feedback_linearization_hparams_.kd2 = 4.0;
-
-  controller_type_ = ControllerType::DynamicFeedbackLinearization;
+  controller_type_ = ControllerType::StaticFeedbackLinearization;
 
   if (controller_type_ == ControllerType::DynamicFeedbackLinearization) {
+    // Setup hparams for dynamic feedback linearization and PD controller:
+    labrob::DynamicFeedbackLinearizationHparams dynamic_feedback_linearization_hparams;
+    dynamic_feedback_linearization_hparams.kp1 = 4.0;
+    dynamic_feedback_linearization_hparams.kp2 = 4.0;
+    dynamic_feedback_linearization_hparams.kd1 = 4.0;
+    dynamic_feedback_linearization_hparams.kd2 = 4.0;
     double xi_0 = 0.4;
     dynamic_feedback_linearization_controller_ptr_ =
         std::make_unique<labrob::DynamicFeedbackLinearizationController>(
-            dynamic_feedback_linearization_hparams_,
+            dynamic_feedback_linearization_hparams,
             simGetSimulationTimeStep(),
             xi_0
+        );
+  } else if (controller_type_ == ControllerType::StaticFeedbackLinearization) {
+    // Setup hparams for static feedback linearization and linear controller:
+    labrob::StaticFeedbackLinearizationHParams static_feedback_linearization_hparams;
+    static_feedback_linearization_hparams.b = 0.75;
+    static_feedback_linearization_hparams.k1 = 1.0;
+    static_feedback_linearization_hparams.k2 = 1.0;
+    static_feedback_linearization_controller_ptr_ =
+        std::make_unique<labrob::StaticFeedbackLinearizationController>(
+            static_feedback_linearization_hparams
         );
   }
 }
@@ -107,9 +111,8 @@ CoppeliaSimP3DXController::update() {
         unicycle_cmd
       );
   } else if (controller_type_ == ControllerType::StaticFeedbackLinearization) {
-    labrob::staticFeedbackLinearizationControl(
+    static_feedback_linearization_controller_ptr_->cmd(
         time,
-        static_feedback_linearization_hparams_,
         p3dx_configuration,
         *desired_trajectory_ptr_,
         unicycle_cmd

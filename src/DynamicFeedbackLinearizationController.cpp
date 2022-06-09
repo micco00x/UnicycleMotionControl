@@ -53,8 +53,6 @@ DynamicFeedbackLinearizationController::cmd(
   xi_prev_ = xi;
   double omega = (u2 * std::cos(theta) - u1 * std::sin(theta)) / xi;
 
-  std::cerr << "v: " << v << ", omega: " << omega << std::endl;
-
   command.setDrivingVelocity(v);
   command.setSteeringVelocity(omega);
 }

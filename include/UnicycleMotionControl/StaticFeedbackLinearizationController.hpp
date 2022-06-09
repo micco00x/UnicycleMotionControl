@@ -7,12 +7,22 @@
 
 namespace labrob {
 
-void staticFeedbackLinearizationControl(
+class StaticFeedbackLinearizationController {
+ public:
+  StaticFeedbackLinearizationController(
+      const labrob::StaticFeedbackLinearizationHParams& hparams
+  );
+
+  void cmd(
     double time,
-    const labrob::StaticFeedbackLinearizationHParams& hparams,
     const labrob::UnicycleConfiguration& configuration,
     const labrob::UnicycleTrajectory& desired_trajectory,
     labrob::UnicycleCommand& command
-);
+  );
+
+ protected:
+  labrob::StaticFeedbackLinearizationHParams hparams_;
+
+}; // end class StaticFeedbackLinearizationController
 
 } // end namespace labrob
