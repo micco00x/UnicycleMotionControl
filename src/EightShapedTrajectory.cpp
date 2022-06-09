@@ -31,7 +31,7 @@ EightShapedTrajectory::eval_dt(double time) const {
   double yd_ddot = -0.25 * R2_ * std::pow(desired_steering_velocity_, 2.0) * std::cos(M_PI + 0.5 * desired_steering_velocity_ * time);
 
   // Use flat outputs:
-  double thetad_dot = (yd_ddot * xd_dot - xd_ddot * yd_dot) / (xd_dot + yd_dot);
+  double thetad_dot = (yd_ddot * xd_dot - xd_ddot * yd_dot) / (std::pow(xd_dot, 2.0) + std::pow(yd_dot, 2.0));
 
   return Pose2DDerivative(xd_dot, yd_dot, thetad_dot);
 }

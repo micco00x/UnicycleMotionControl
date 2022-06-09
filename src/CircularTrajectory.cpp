@@ -37,7 +37,7 @@ CircularTrajectory::eval_dt(double time) const {
   double xd_ddot = -radius_ * std::cos(phi_ + time / duration_ * 2.0 * M_PI) * std::pow(2.0 * M_PI / duration_, 2.0);
   double yd_ddot = -radius_ * std::sin(phi_ + time / duration_ * 2.0 * M_PI) * std::pow(2.0 * M_PI / duration_, 2.0);
   // Use flat outputs:
-  double thetad_dot = (yd_ddot * xd_dot - xd_ddot * yd_dot) / (xd_dot + yd_dot);
+  double thetad_dot = (yd_ddot * xd_dot - xd_ddot * yd_dot) / (std::pow(xd_dot, 2.0) + std::pow(yd_dot, 2.0));
 
   return Pose2DDerivative(xd_dot, yd_dot, thetad_dot);
 }
