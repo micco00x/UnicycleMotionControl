@@ -13,7 +13,7 @@ EightShapedTrajectory::eval(double time) const {
 
   labrob::Pose2DDerivative qd_dot = eval_dt(time);
 
-  double xd = R1_ * std::sin(desired_steering_velocity_ *time);
+  double xd = R1_ * std::sin(desired_steering_velocity_ * time);
   double yd = R2_ + R2_ * std::cos(M_PI + 0.5 * desired_steering_velocity_ * time);
   // Use flat outputs:
   double thetad = std::atan2(qd_dot.y_dot(), qd_dot.x_dot());
