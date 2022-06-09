@@ -233,7 +233,7 @@ labrob::Pose2DDerivative
 CoppeliaSimP3DXController::retrieveP3DXUnicycleVelocity() {
   simFloat p3dx_unicycle_linear_velocity[3];
   simFloat p3dx_unicycle_angular_velocity[3];
-  simGetObjectVelocity(p3dx_unicycle_handle_, p3dx_unicycle_linear_velocity, p3dx_unicycle_linear_velocity);
+  simGetObjectVelocity(p3dx_unicycle_handle_, p3dx_unicycle_linear_velocity, p3dx_unicycle_angular_velocity);
 
   return labrob::Pose2DDerivative(
       p3dx_unicycle_linear_velocity[0],
