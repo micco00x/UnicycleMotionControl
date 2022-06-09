@@ -75,7 +75,7 @@ SquaredTrajectoryWithConstantDrivingVelocity::eval_dt(double time) const {
   double xd_dot;
   double yd_dot;
   // Using flat outputs (NOTE: it is zero because \ddot{x}, \ddot{y} = 0):
-  double thetad_dot = 0.0; // 
+  double thetad_dot = 0.0;
 
   if (time < t0_) {
     xd_dot = 0.0;
@@ -99,5 +99,13 @@ SquaredTrajectoryWithConstantDrivingVelocity::eval_dt(double time) const {
 
   return labrob::Pose2DDerivative(xd_dot, yd_dot, thetad_dot);
 }
+
+labrob::Pose2DSecondDerivative
+SquaredTrajectoryWithConstantDrivingVelocity::eval_ddt(double time) const {
+  // It is zero because assuming constant driving velocity and constant (=0)
+  // steering velocity.
+  return labrob::Pose2DSecondDerivative(0.0, 0.0, 0.0);
+}
+
 
 } // end namespace labrob

@@ -5,6 +5,7 @@
 
 #include <UnicycleMotionControl/CoppeliaSimController.hpp>
 #include <UnicycleMotionControl/DifferentialWheeledRobotCommand.hpp>
+#include <UnicycleMotionControl/DynamicFeedbackLinearizationController.hpp>
 #include <UnicycleMotionControl/hparams.hpp>
 #include <UnicycleMotionControl/UnicycleTrajectory.hpp>
 
@@ -34,6 +35,9 @@ class CoppeliaSimP3DXController : public CoppeliaSimController {
 
   labrob::StaticFeedbackLinearizationHParams static_feedback_linearization_hparams_;
 
+  labrob::DynamicFeedbackLinearizationHparams dynamic_feedback_linearization_hparams_;
+  std::unique_ptr<labrob::DynamicFeedbackLinearizationController> dynamic_feedback_linearization_controller_ptr_;
+
  private:
   std::ofstream time_log_file_;
   std::ofstream unicycle_cmd_log_file_;
@@ -43,6 +47,9 @@ class CoppeliaSimP3DXController : public CoppeliaSimController {
   std::ofstream unicycle_desired_velocity_log_file_;
 
   enum class TrajectoryType { Circular, EightShaped, Squared };
+  enum class ControllerType { DynamicFeedbackLinearization, StaticFeedbackLinearization };
+
+  ControllerType controller_type_;
 
   std::unique_ptr<labrob::UnicycleTrajectory> generateDesiredTrajectory(
       TrajectoryType trajectory_type

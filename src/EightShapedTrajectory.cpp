@@ -36,4 +36,17 @@ EightShapedTrajectory::eval_dt(double time) const {
   return Pose2DDerivative(xd_dot, yd_dot, thetad_dot);
 }
 
+labrob::Pose2DSecondDerivative
+EightShapedTrajectory::eval_ddt(double time) const {
+
+  double xd_ddot = -R1_ * std::pow(desired_steering_velocity_, 2.0) * std::sin(desired_steering_velocity_ * time);
+  double yd_ddot = -0.25 * R2_ * std::pow(desired_steering_velocity_, 2.0) * std::cos(M_PI + 0.5 * desired_steering_velocity_ * time);
+
+  // TODO: compute thetad_ddot
+  double thetad_ddot = 0.0;
+
+  return Pose2DSecondDerivative(xd_ddot, yd_ddot, thetad_ddot);
+}
+
+
 } // end namespace labrob

@@ -62,12 +62,31 @@ CoppeliaSimP3DXController::init() {
     std::cerr << "Could not get object with object path " << right_motor_object_path << std::endl;
   }
 
-  TrajectoryType trajectory_type = TrajectoryType::Squared;
+  TrajectoryType trajectory_type = TrajectoryType::Circular;
   desired_trajectory_ptr_ = generateDesiredTrajectory(trajectory_type);
 
+  // Setup hparams for static feedback linearization and linear controller:
   static_feedback_linearization_hparams_.b = 0.75;
   static_feedback_linearization_hparams_.k1 = 1.0;
   static_feedback_linearization_hparams_.k2 = 1.0;
+
+  // Setup hparams for dynamic feedback linearization and PD controller:
+  dynamic_feedback_linearization_hparams_.kp1 = 4.0;
+  dynamic_feedback_linearization_hparams_.kp2 = 4.0;
+  dynamic_feedback_linearization_hparams_.kd1 = 4.0;
+  dynamic_feedback_linearization_hparams_.kd2 = 4.0;
+
+  controller_type_ = ControllerType::DynamicFeedbackLinearization;
+
+  if (controller_type_ == ControllerType::DynamicFeedbackLinearization) {
+    double xi_0 = 0.4;
+    dynamic_feedback_linearization_controller_ptr_ =
+        std::make_unique<labrob::DynamicFeedbackLinearizationController>(
+            dynamic_feedback_linearization_hparams_,
+            simGetSimulationTimeStep(),
+            xi_0
+        );
+  }
 }
 
 void
@@ -75,16 +94,27 @@ CoppeliaSimP3DXController::update() {
   double time = static_cast<double>(simGetSimulationTime());
 
   labrob::UnicycleConfiguration p3dx_configuration = retrieveP3DXCorrespondingUnicycle();
+  labrob::Pose2DDerivative p3dx_velocity = retrieveP3DXVelocity();
 
   labrob::UnicycleCommand unicycle_cmd;
 
-  labrob::staticFeedbackLinearizationControl(
-      time,
-      static_feedback_linearization_hparams_,
-      p3dx_configuration,
-      *desired_trajectory_ptr_,
-      unicycle_cmd
-  );
+  if (controller_type_ == ControllerType::DynamicFeedbackLinearization) {
+    dynamic_feedback_linearization_controller_ptr_->cmd(
+        time,
+        p3dx_configuration,
+        p3dx_velocity,
+        *desired_trajectory_ptr_,
+        unicycle_cmd
+      );
+  } else if (controller_type_ == ControllerType::StaticFeedbackLinearization) {
+    labrob::staticFeedbackLinearizationControl(
+        time,
+        static_feedback_linearization_hparams_,
+        p3dx_configuration,
+        *desired_trajectory_ptr_,
+        unicycle_cmd
+    );
+  }
 
   p3dx_robot_cmd_.setVelocitiesFromUnicycleCommand(unicycle_cmd);
 

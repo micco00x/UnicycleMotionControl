@@ -11,6 +11,7 @@ class EightShapedTrajectory : public UnicycleTrajectory {
 
   labrob::Pose2D eval(double time) const override;
   labrob::Pose2DDerivative eval_dt(double time) const override;
+  labrob::Pose2DSecondDerivative eval_ddt(double time) const override;
 
  protected:
   const double R1_ = 3.0;

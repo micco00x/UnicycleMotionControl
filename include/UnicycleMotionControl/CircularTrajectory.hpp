@@ -16,6 +16,7 @@ class CircularTrajectory : public UnicycleTrajectory {
 
   labrob::Pose2D eval(double time) const override;
   labrob::Pose2DDerivative eval_dt(double time) const override;
+  labrob::Pose2DSecondDerivative eval_ddt(double time) const override;
 
  protected:
   labrob::Position2D center_;

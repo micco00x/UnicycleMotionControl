@@ -53,6 +53,24 @@ class Pose2DDerivative {
   double x_dot_, y_dot_, theta_dot_;
 }; // end class Pose2DDerivative
 
+class Pose2DSecondDerivative {
+ public:
+  Pose2DSecondDerivative();
+  Pose2DSecondDerivative(double x_ddot, double y_ddot, double theta_ddot);
+
+  double x_ddot() const;
+  double& x_ddot();
+
+  double y_ddot() const;
+  double& y_ddot();
+
+  double theta_ddot() const;
+  double& theta_ddot();
+
+ protected:
+  double x_ddot_, y_ddot_, theta_ddot_;
+}; // end class Pose2DSecondDerivative
+
 class Velocity2D {
  public:
   Velocity2D();

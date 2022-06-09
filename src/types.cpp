@@ -41,6 +41,22 @@ double& Pose2DDerivative::y_dot() { return y_dot_; }
 double Pose2DDerivative::theta_dot() const { return theta_dot_; }
 double& Pose2DDerivative::theta_dot() { return theta_dot_; }
 
+// Pose2DSecondDerivative
+Pose2DSecondDerivative::Pose2DSecondDerivative()
+  : x_ddot_(0.0), y_ddot_(0.0), theta_ddot_(0.0) { }
+Pose2DSecondDerivative::Pose2DSecondDerivative(
+    double x_ddot, double y_ddot, double theta_ddot)
+  : x_ddot_(x_ddot), y_ddot_(y_ddot), theta_ddot_(theta_ddot_) { }
+
+double Pose2DSecondDerivative::x_ddot() const { return x_ddot_; }
+double& Pose2DSecondDerivative::x_ddot() { return x_ddot_; }
+
+double Pose2DSecondDerivative::y_ddot() const { return y_ddot_; }
+double& Pose2DSecondDerivative::y_ddot() { return y_ddot_; }
+
+double Pose2DSecondDerivative::theta_ddot() const { return theta_ddot_; }
+double& Pose2DSecondDerivative::theta_ddot() { return theta_ddot_; }
+
 // Velocity2D
 Velocity2D::Velocity2D() : x_(0.0), y_(0.0) { }
 Velocity2D::Velocity2D(double x, double y) : x_(x), y_(y) { }
