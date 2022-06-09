@@ -1,6 +1,7 @@
 #include <UnicycleMotionControl/CoppeliaSimP3DXController.hpp>
 #include <UnicycleMotionControl/CircularTrajectory.hpp>
 #include <UnicycleMotionControl/EightShapedTrajectory.hpp>
+#include <UnicycleMotionControl/LinearTrajectoryWithConstantDrivingVelocity.hpp>
 #include <UnicycleMotionControl/SquaredTrajectoryWithConstantDrivingVelocity.hpp>
 #include <UnicycleMotionControl/UnicycleConfiguration.hpp>
 
@@ -62,7 +63,7 @@ CoppeliaSimP3DXController::init() {
     std::cerr << "Could not get object with object path " << right_motor_object_path << std::endl;
   }
 
-  TrajectoryType trajectory_type = TrajectoryType::Circular;
+  TrajectoryType trajectory_type = TrajectoryType::Linear;
   desired_trajectory_ptr_ = generateDesiredTrajectory(trajectory_type);
 
   controller_type_ = ControllerType::ApproximateLinearization;
@@ -259,6 +260,11 @@ CoppeliaSimP3DXController::generateDesiredTrajectory(
 
     return std::make_unique<labrob::EightShapedTrajectory>(
         desired_steering_velocity
+    );
+  } else if (trajectory_type == TrajectoryType::Linear) {
+    return std::make_unique<labrob::LinearTrajectoryWithConstantDrivingVelocity>(
+        labrob::Pose2D(1.0, 0.0, 0.0),
+        0.4
     );
   } else if (trajectory_type == TrajectoryType::Squared) {
     double desired_driving_velocity = 0.4;
