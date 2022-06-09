@@ -21,10 +21,10 @@ class CoppeliaSimP3DXController : public CoppeliaSimController {
   void update() override;
 
  protected:
-  labrob::UnicycleConfiguration retrieveP3DXCorrespondingUnicycle();
-  labrob::Pose2DDerivative retrieveP3DXVelocity();
+  labrob::UnicycleConfiguration retrieveP3DXUnicycleConfiguration();
+  labrob::Pose2DDerivative retrieveP3DXUnicycleVelocity();
 
-  simInt p3dx_handle_;
+  simInt p3dx_unicycle_handle_;
   simInt left_motor_handle_;
   simInt right_motor_handle_;
 
