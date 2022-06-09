@@ -61,12 +61,21 @@ CoppeliaSimP3DXController::init() {
     std::cerr << "Could not get object with object path " << right_motor_object_path << std::endl;
   }
 
-  TrajectoryType trajectory_type = TrajectoryType::Circular;
+  TrajectoryType trajectory_type = TrajectoryType::EightShaped;
   desired_trajectory_ptr_ = generateDesiredTrajectory(trajectory_type);
 
-  controller_type_ = ControllerType::StaticFeedbackLinearization;
+  controller_type_ = ControllerType::ApproximateLinearization;
 
-  if (controller_type_ == ControllerType::DynamicFeedbackLinearization) {
+  if (controller_type_ == ControllerType::ApproximateLinearization) {
+    // Setup hparams for approximate linearization and linear controller:
+    labrob::ApproximateLinearizationHparams approximate_linearization_hparams;
+    approximate_linearization_hparams.zeta = 0.7;
+    approximate_linearization_hparams.a = 1.0;
+    approximate_linearization_controller_ptr_=
+        std::make_unique<labrob::ApproximateLinearizationController>(
+            approximate_linearization_hparams
+        );
+  } else if (controller_type_ == ControllerType::DynamicFeedbackLinearization) {
     // Setup hparams for dynamic feedback linearization and PD controller:
     labrob::DynamicFeedbackLinearizationHparams dynamic_feedback_linearization_hparams;
     dynamic_feedback_linearization_hparams.kp1 = 4.0;
@@ -102,7 +111,14 @@ CoppeliaSimP3DXController::update() {
 
   labrob::UnicycleCommand unicycle_cmd;
 
-  if (controller_type_ == ControllerType::DynamicFeedbackLinearization) {
+  if (controller_type_ == ControllerType::ApproximateLinearization) {
+    approximate_linearization_controller_ptr_->cmd(
+        time,
+        p3dx_configuration,
+        *desired_trajectory_ptr_,
+        unicycle_cmd
+    );
+  } else if (controller_type_ == ControllerType::DynamicFeedbackLinearization) {
     dynamic_feedback_linearization_controller_ptr_->cmd(
         time,
         p3dx_configuration,

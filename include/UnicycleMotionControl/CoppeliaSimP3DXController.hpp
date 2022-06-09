@@ -3,6 +3,7 @@
 #include <fstream>
 #include <memory>
 
+#include <UnicycleMotionControl/ApproximateLinearizationController.hpp>
 #include <UnicycleMotionControl/CoppeliaSimController.hpp>
 #include <UnicycleMotionControl/DifferentialWheeledRobotCommand.hpp>
 #include <UnicycleMotionControl/DynamicFeedbackLinearizationController.hpp>
@@ -35,6 +36,7 @@ class CoppeliaSimP3DXController : public CoppeliaSimController {
   std::unique_ptr<labrob::UnicycleTrajectory> desired_trajectory_ptr_;
 
   // TODO: add mother class and use polymorphism here.
+  std::unique_ptr<labrob::ApproximateLinearizationController> approximate_linearization_controller_ptr_;
   std::unique_ptr<labrob::DynamicFeedbackLinearizationController> dynamic_feedback_linearization_controller_ptr_;
   std::unique_ptr<labrob::StaticFeedbackLinearizationController> static_feedback_linearization_controller_ptr_;
 
@@ -47,7 +49,11 @@ class CoppeliaSimP3DXController : public CoppeliaSimController {
   std::ofstream unicycle_desired_velocity_log_file_;
 
   enum class TrajectoryType { Circular, EightShaped, Squared };
-  enum class ControllerType { DynamicFeedbackLinearization, StaticFeedbackLinearization };
+  enum class ControllerType {
+      ApproximateLinearization,
+      DynamicFeedbackLinearization,
+      StaticFeedbackLinearization
+  };
 
   ControllerType controller_type_;
 

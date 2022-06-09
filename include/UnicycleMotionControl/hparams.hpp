@@ -2,6 +2,10 @@
 
 namespace labrob {
 
+struct ApproximateLinearizationHparams {
+  double zeta, a;
+};
+
 struct StaticFeedbackLinearizationHParams {
   double b, k1, k2;
 };
