@@ -1,3 +1,4 @@
+import math
 import matplotlib.pyplot as plt
 import os
 
@@ -134,6 +135,21 @@ if __name__ == '__main__':
     ax_pos_theta.plot(time_data, [q.theta for q in desired_pose_data], label='theta des')
     ax_pos_theta.legend()
     ax_pos_theta.grid()
+
+    # Plot cartesian error:
+    cartesian_error_data = []
+    for qd, q in zip(desired_pose_data, configuration_data):
+        err = math.sqrt(math.pow(qd.x - q.x, 2.0) + math.pow(qd.y - q.y, 2.0))
+        cartesian_error_data.append(err)
+
+    fig_cartesian_err = plt.figure()
+
+    ax_cartesian_err = fig_cartesian_err.add_subplot(1, 1, 1)
+    ax_cartesian_err.set_xlabel('[s]')
+    ax_cartesian_err.set_ylabel('[m]')
+    ax_cartesian_err.plot(time_data, cartesian_error_data, label='e_p')
+    ax_cartesian_err.legend()
+    ax_cartesian_err.grid()
 
     # Plot unicycle velocity:
     fig_velocities = plt.figure()
