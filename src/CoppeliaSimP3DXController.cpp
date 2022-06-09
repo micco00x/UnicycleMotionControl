@@ -63,10 +63,10 @@ CoppeliaSimP3DXController::init() {
     std::cerr << "Could not get object with object path " << right_motor_object_path << std::endl;
   }
 
-  TrajectoryType trajectory_type = TrajectoryType::Linear;
+  TrajectoryType trajectory_type = TrajectoryType::EightShaped;
   desired_trajectory_ptr_ = generateDesiredTrajectory(trajectory_type);
 
-  controller_type_ = ControllerType::ApproximateLinearization;
+  controller_type_ = ControllerType::DynamicFeedbackLinearization;
 
   if (controller_type_ == ControllerType::ApproximateLinearization) {
     // Setup hparams for approximate linearization and linear controller:
@@ -259,6 +259,7 @@ CoppeliaSimP3DXController::generateDesiredTrajectory(
     double desired_steering_velocity = 0.06;
 
     return std::make_unique<labrob::EightShapedTrajectory>(
+        labrob::Pose2D(1.0, 0.0, 0.0),
         desired_steering_velocity
     );
   } else if (trajectory_type == TrajectoryType::Linear) {

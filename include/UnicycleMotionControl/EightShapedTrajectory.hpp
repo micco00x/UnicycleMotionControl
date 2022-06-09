@@ -7,7 +7,10 @@ namespace labrob {
 
 class EightShapedTrajectory : public UnicycleTrajectory {
  public:
-  EightShapedTrajectory(double desired_steering_velocity);
+  EightShapedTrajectory(
+      const labrob::Pose2D& starting_pose,
+      double desired_steering_velocity
+  );
 
   labrob::Pose2D eval(double time) const override;
   labrob::Pose2DDerivative eval_dt(double time) const override;
@@ -17,6 +20,7 @@ class EightShapedTrajectory : public UnicycleTrajectory {
   const double R1_ = 3.0;
   const double R2_ = 3.0;
 
+  labrob::Pose2D starting_pose_;
   double desired_steering_velocity_;
 }; // end class CircularTrajectory
 
