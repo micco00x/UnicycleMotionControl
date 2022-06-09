@@ -7,6 +7,7 @@
 #include <cmath>
 #include <filesystem>
 #include <iostream>
+#include <limits>
 
 
 namespace labrob {
@@ -100,6 +101,21 @@ CoppeliaSimP3DXController::init() {
             static_feedback_linearization_hparams
         );
   }
+
+  // Add drawing objects to show during simulation:
+  simFloat drawing_point_size = 2.0f;
+  simFloat black_color[3] = {0.0f, 0.0f, 0.0f};
+  simFloat green_color[3] = {0.0f, 1.0, 0.0f};
+  p3dx_unicycle_drawing_object_handle_= simAddDrawingObject(
+      sim_drawing_points,
+      drawing_point_size, 0.0f, -1, std::numeric_limits<simInt>::max(),
+      black_color, nullptr, nullptr, nullptr
+  );
+  desired_trajectory_drawing_object_handle_ = simAddDrawingObject(
+      sim_drawing_points,
+      drawing_point_size, 0.0f, -1, std::numeric_limits<simInt>::max(),
+      green_color, nullptr, nullptr, nullptr
+  );
 }
 
 void
@@ -140,6 +156,26 @@ CoppeliaSimP3DXController::update() {
   // Send commands to robot:
   simSetJointTargetVelocity(left_motor_handle_, p3dx_robot_cmd_.getLeftMotorVelocity());
   simSetJointTargetVelocity(right_motor_handle_, p3dx_robot_cmd_.getRightMotorVelocity());
+
+  // Draw P3DX unicycle configuration and desired trajectory:
+  if (draw_trajectories_) {
+    simFloat p3dx_unicycle_position[3];
+    simGetObjectPosition(p3dx_unicycle_handle_, -1, p3dx_unicycle_position);
+    simAddDrawingObjectItem(
+        p3dx_unicycle_drawing_object_handle_,
+        p3dx_unicycle_position
+    );
+    labrob::Pose2D desired_trajectory = desired_trajectory_ptr_->eval(time);
+    simFloat p3dx_unicycle_desired_position[3] = {
+        static_cast<float>(desired_trajectory.x()),
+        static_cast<float>(desired_trajectory.y()),
+        p3dx_unicycle_position[2]
+    };
+    simAddDrawingObjectItem(
+        desired_trajectory_drawing_object_handle_,
+        p3dx_unicycle_desired_position
+    );
+  }
 
   // Log:
   if (time_log_file_.is_open()) {

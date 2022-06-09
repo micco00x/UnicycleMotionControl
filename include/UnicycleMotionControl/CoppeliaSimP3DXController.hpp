@@ -28,6 +28,10 @@ class CoppeliaSimP3DXController : public CoppeliaSimController {
   simInt left_motor_handle_;
   simInt right_motor_handle_;
 
+  simInt p3dx_unicycle_drawing_object_handle_;
+  simInt desired_trajectory_drawing_object_handle_;
+  bool draw_trajectories_ = true;
+
   const double p3dx_wheel_radius_ = 0.09765;
   const double p3dx_dist_wheel_to_wheel_ = 0.330;
 
