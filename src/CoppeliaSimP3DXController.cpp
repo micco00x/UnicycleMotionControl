@@ -120,7 +120,8 @@ CoppeliaSimP3DXController::init() {
   // Add drawing objects to show during simulation:
   simFloat drawing_point_size = 2.0f;
   simFloat black_color[3] = {0.0f, 0.0f, 0.0f};
-  simFloat green_color[3] = {0.0f, 1.0, 0.0f};
+  simFloat green_color[3] = {0.0f, 1.0f, 0.0f};
+  simFloat red_color[3]   = {1.0f, 0.0f, 0.0f};
   p3dx_unicycle_drawing_object_handle_= simAddDrawingObject(
       sim_drawing_points,
       drawing_point_size, 0.0f, -1, std::numeric_limits<simInt>::max(),
@@ -129,7 +130,7 @@ CoppeliaSimP3DXController::init() {
   desired_trajectory_drawing_object_handle_ = simAddDrawingObject(
       sim_drawing_points,
       drawing_point_size, 0.0f, -1, std::numeric_limits<simInt>::max(),
-      green_color, nullptr, nullptr, nullptr
+      red_color, nullptr, nullptr, nullptr
   );
 }
 
