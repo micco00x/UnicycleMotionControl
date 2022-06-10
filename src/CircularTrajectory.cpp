@@ -12,7 +12,7 @@ CircularTrajectory::CircularTrajectory(
 ) : center_(center),
     radius_(radius),
     desired_driving_velocity_(desired_driving_velocity),
-    duration_(2.0 * M_PI * radius / desired_driving_velocity),
+    desired_steering_velocity_(desired_driving_velocity / radius),
     phi_(phi) { }
 
 labrob::Pose2D
@@ -20,8 +20,8 @@ CircularTrajectory::eval(double time) const {
 
   labrob::Pose2DDerivative qd_dot = eval_dt(time);
 
-  double xd = center_.x() + radius_ * std::cos(phi_ + time / duration_ * 2.0 * M_PI);
-  double yd = center_.y() + radius_ * std::sin(phi_ + time / duration_ * 2.0 * M_PI);
+  double xd = center_.x() + radius_ * std::cos(phi_ + desired_steering_velocity_ * time);
+  double yd = center_.y() + radius_ * std::sin(phi_ + desired_steering_velocity_ * time);
   // Use flat outputs:
   double thetad = std::atan2(qd_dot.y_dot(), qd_dot.x_dot());
 
@@ -31,11 +31,11 @@ CircularTrajectory::eval(double time) const {
 labrob::Pose2DDerivative
 CircularTrajectory::eval_dt(double time) const {
 
-  double xd_dot = -radius_ * std::sin(phi_ + time / duration_ * 2.0 * M_PI) * 2.0 * M_PI / duration_;
-  double yd_dot =  radius_ * std::cos(phi_ + time / duration_ * 2.0 * M_PI) * 2.0 * M_PI / duration_;
+  double xd_dot = -radius_ * std::sin(phi_ + desired_steering_velocity_ * time) * desired_steering_velocity_;
+  double yd_dot =  radius_ * std::cos(phi_ + desired_steering_velocity_ * time) * desired_steering_velocity_;
 
-  double xd_ddot = -radius_ * std::cos(phi_ + time / duration_ * 2.0 * M_PI) * std::pow(2.0 * M_PI / duration_, 2.0);
-  double yd_ddot = -radius_ * std::sin(phi_ + time / duration_ * 2.0 * M_PI) * std::pow(2.0 * M_PI / duration_, 2.0);
+  double xd_ddot = -radius_ * std::cos(phi_ + desired_steering_velocity_ * time) * std::pow(desired_steering_velocity_, 2.0);
+  double yd_ddot = -radius_ * std::sin(phi_ + desired_steering_velocity_ * time) * std::pow(desired_steering_velocity_, 2.0);
   // Use flat outputs:
   double thetad_dot = (yd_ddot * xd_dot - xd_ddot * yd_dot) / (std::pow(xd_dot, 2.0) + std::pow(yd_dot, 2.0));
 
@@ -44,14 +44,13 @@ CircularTrajectory::eval_dt(double time) const {
 
 labrob::Pose2DSecondDerivative
 CircularTrajectory::eval_ddt(double time) const {
-  double xd_dot = -radius_ * std::sin(phi_ + time / duration_ * 2.0 * M_PI) * 2.0 * M_PI / duration_;
-  double yd_dot =  radius_ * std::cos(phi_ + time / duration_ * 2.0 * M_PI) * 2.0 * M_PI / duration_;
+  double xd_dot = -radius_ * std::sin(phi_ + desired_steering_velocity_ * time) * desired_steering_velocity_;
+  double yd_dot =  radius_ * std::cos(phi_ + desired_steering_velocity_ * time) * desired_steering_velocity_;
 
-  double xd_ddot = -radius_ * std::cos(phi_ + time / duration_ * 2.0 * M_PI) * std::pow(2.0 * M_PI / duration_, 2.0);
-  double yd_ddot = -radius_ * std::sin(phi_ + time / duration_ * 2.0 * M_PI) * std::pow(2.0 * M_PI / duration_, 2.0);
+  double xd_ddot = -radius_ * std::cos(phi_ + desired_steering_velocity_ * time) * std::pow(desired_steering_velocity_, 2.0);
+  double yd_ddot = -radius_ * std::sin(phi_ + desired_steering_velocity_ * time) * std::pow(desired_steering_velocity_, 2.0);
 
-  // TODO: compute thetad_ddot
-
+  // NOTE: thetad_ddot is zero because thetad_dot is const.
   return Pose2DSecondDerivative(xd_ddot, yd_ddot, 0.0);
 }
 

@@ -24,7 +24,7 @@ class CircularTrajectory : public UnicycleTrajectory {
   labrob::Position2D center_;
   double radius_;
   double desired_driving_velocity_;
-  double duration_;
+  double desired_steering_velocity_;
   double phi_;
 }; // end class CircularTrajectory
 
