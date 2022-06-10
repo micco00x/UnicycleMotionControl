@@ -77,7 +77,7 @@ CoppeliaSimP3DXController::init() {
   simGetObjectPosition(p3dx_unicycle_handle_, -1, p3dx_unicycle_position);
   z_unicycle_ = static_cast<double>(p3dx_unicycle_position[2]);
 
-  TrajectoryType trajectory_type = TrajectoryType::Squared;
+  TrajectoryType trajectory_type = TrajectoryType::Circular;
   desired_trajectory_ptr_ = generateDesiredTrajectory(trajectory_type);
 
   controller_type_ = ControllerType::StaticFeedbackLinearization;
