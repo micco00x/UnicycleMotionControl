@@ -1,5 +1,6 @@
 import math
 import matplotlib.pyplot as plt
+import numpy as np
 import os
 
 class UnicycleCommand:
@@ -90,6 +91,20 @@ if __name__ == '__main__':
             y_dot = float(data[1])
             theta_dot = float(data[2])
             desired_velocity_data.append(UnicycleVelocity(x_dot, y_dot, theta_dot))
+
+    max_t = 16.0
+    # Find id of element in time_data such that it is greater than max_t:
+    for idx, t in enumerate(time_data):
+        if (t >= max_t):
+            idx_max_t = idx
+            break
+
+    time_data = time_data[0:idx_max_t]
+    command_data = command_data[0:idx_max_t]
+    configuration_data = configuration_data[0:idx_max_t]
+    desired_pose_data = desired_pose_data[0:idx_max_t]
+    measured_velocity_data = measured_velocity_data[0:idx_max_t]
+    desired_velocity_data = desired_velocity_data[0:idx_max_t]
 
 
     # Plot unicycle commands:
