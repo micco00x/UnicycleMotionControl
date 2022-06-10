@@ -23,15 +23,13 @@ StaticFeedbackLinearizationController::cmd(
 
   double xd = desired_pose.x();
   double yd = desired_pose.y();
-  double thetad = desired_pose.theta();
   double xd_dot = desired_velocity.x_dot();
   double yd_dot = desired_velocity.y_dot();
-  double thetad_dot = desired_velocity.theta_dot();
 
-  double r1d = xd + hparams_.b * std::cos(thetad);
-  double r2d = yd + hparams_.b * std::sin(thetad);
-  double r1d_dot = xd_dot - hparams_.b * thetad_dot * std::sin(thetad);
-  double r2d_dot = yd_dot + hparams_.b * thetad_dot * std::cos(thetad);
+  double r1d = xd;
+  double r2d = yd;
+  double r1d_dot = xd_dot;
+  double r2d_dot = yd_dot;
 
   double x = configuration.x();
   double y = configuration.y();
