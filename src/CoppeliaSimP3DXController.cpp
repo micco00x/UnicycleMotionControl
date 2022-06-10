@@ -320,7 +320,7 @@ CoppeliaSimP3DXController::generateDesiredTrajectory(
   if (trajectory_type == TrajectoryType::Circular) {
     double desired_driving_velocity = 1.0;
     return std::make_unique<labrob::CircularTrajectory>(
-        labrob::Position2D(4.0, 3.0),
+        labrob::Position2D(4.0, 4.0),
         3.0,
         desired_driving_velocity,
         -M_PI / 2.0
