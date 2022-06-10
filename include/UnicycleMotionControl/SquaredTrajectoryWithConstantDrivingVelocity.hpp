@@ -18,6 +18,8 @@ class SquaredTrajectoryWithConstantDrivingVelocity : public UnicycleTrajectory {
   labrob::Pose2DDerivative eval_dt(double time) const override;
   labrob::Pose2DSecondDerivative eval_ddt(double time) const override;
 
+  double getDesiredDrivingVelocity(double time) const override;
+
  protected:
   double vd_;
   double x0_, y0_, theta0_;

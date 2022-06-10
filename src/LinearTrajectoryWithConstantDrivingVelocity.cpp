@@ -47,5 +47,10 @@ LinearTrajectoryWithConstantDrivingVelocity::eval_ddt(double time) const {
   return Pose2DSecondDerivative(0.0, 0.0, 0.0);
 }
 
+double
+LinearTrajectoryWithConstantDrivingVelocity::getDesiredDrivingVelocity(double time) const {
+  return desired_driving_velocity_;
+}
+
 
 } // end namespace labrob

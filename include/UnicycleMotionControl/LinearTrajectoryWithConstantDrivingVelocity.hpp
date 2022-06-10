@@ -16,6 +16,8 @@ class LinearTrajectoryWithConstantDrivingVelocity : public UnicycleTrajectory {
   labrob::Pose2DDerivative eval_dt(double time) const override;
   labrob::Pose2DSecondDerivative eval_ddt(double time) const override;
 
+  double getDesiredDrivingVelocity(double time) const override;
+
  protected:
   labrob::Pose2D starting_pose_;
   double desired_driving_velocity_;

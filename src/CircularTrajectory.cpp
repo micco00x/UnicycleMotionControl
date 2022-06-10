@@ -55,5 +55,9 @@ CircularTrajectory::eval_ddt(double time) const {
   return Pose2DSecondDerivative(xd_ddot, yd_ddot, 0.0);
 }
 
+double
+CircularTrajectory::getDesiredDrivingVelocity(double time) const {
+  return desired_driving_velocity_;
+}
 
 } // end namespace labrob

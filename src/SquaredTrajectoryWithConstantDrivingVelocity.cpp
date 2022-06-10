@@ -107,5 +107,9 @@ SquaredTrajectoryWithConstantDrivingVelocity::eval_ddt(double time) const {
   return labrob::Pose2DSecondDerivative(0.0, 0.0, 0.0);
 }
 
+double
+SquaredTrajectoryWithConstantDrivingVelocity::getDesiredDrivingVelocity(double time) const {
+  return vd_;
+}
 
 } // end namespace labrob

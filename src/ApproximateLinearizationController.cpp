@@ -5,7 +5,7 @@
 namespace labrob {
 
 ApproximateLinearizationController::ApproximateLinearizationController(
-    const labrob::ApproximateLinearizationHparams& hparams
+    const labrob::ApproximateLinearizationHparams& hparams  
 ) : hparams_(hparams) {
 
 }
@@ -22,19 +22,14 @@ ApproximateLinearizationController::cmd(
   double theta = unicycle_configuration.theta();
 
   labrob::Pose2D desired_pose = desired_trajectory.eval(time);
-  labrob::Pose2DDerivative desired_velocity = desired_trajectory.eval_dt(time);
 
   double xd = desired_pose.x();
   double yd = desired_pose.y();
   double thetad = desired_pose.theta();
 
-  double xd_dot = desired_velocity.x_dot();
-  double yd_dot = desired_velocity.y_dot();
-  double thetad_dot = desired_velocity.theta_dot();
-
   // NOTE: controller is stable iff vd and omegad are const.
-  double vd = std::sqrt(std::pow(xd_dot, 2.0) + std::pow(yd_dot, 2.0));
-  double omegad = thetad_dot;
+  double vd = desired_trajectory.getDesiredDrivingVelocity(time);
+  double omegad = desired_trajectory.getDesiredSteeringVelocity(time);
 
   double deltax = xd - x;
   double deltay = yd - y;

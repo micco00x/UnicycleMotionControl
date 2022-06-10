@@ -52,5 +52,11 @@ EightShapedTrajectory::eval_ddt(double time) const {
   return Pose2DSecondDerivative(xd_ddot, yd_ddot, thetad_ddot);
 }
 
+double
+EightShapedTrajectory::getDesiredDrivingVelocity(double time) const {
+  auto q_dot = eval_dt(time);
+  // NOTE: safe to do this because assuming the robot is only moving forward.
+  return std::sqrt(std::pow(q_dot.x_dot(), 2.0) + std::pow(q_dot.y_dot(), 2.0));
+}
 
 } // end namespace labrob
