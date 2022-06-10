@@ -123,7 +123,7 @@ if __name__ == '__main__':
     fig_commands = plt.figure()
 
     ax_driving_velocity = fig_commands.add_subplot(2, 1, 1)
-    ax_driving_velocity.set_xlabel(s_label)
+    #ax_driving_velocity.set_xlabel(s_label)
     ax_driving_velocity.set_ylabel(lv_label)
     ax_driving_velocity.plot(time_data, [cmd.driving_velocity for cmd in command_data], label=r'$v$')
     ax_driving_velocity.legend(loc=legend_location)
@@ -140,7 +140,7 @@ if __name__ == '__main__':
     fig_positions = plt.figure()
 
     ax_pos_x = fig_positions.add_subplot(3, 1, 1)
-    ax_pos_x.set_xlabel(s_label)
+    #ax_pos_x.set_xlabel(s_label)
     ax_pos_x.set_ylabel(m_label)
     ax_pos_x.plot(time_data, [q.x for q in configuration_data], label=r'$x$')
     ax_pos_x.plot(time_data, [q.x for q in desired_pose_data], label=r'$x_d$')
@@ -148,7 +148,7 @@ if __name__ == '__main__':
     ax_pos_x.grid()
 
     ax_pos_y = fig_positions.add_subplot(3, 1, 2)
-    ax_pos_y.set_xlabel(s_label)
+    #ax_pos_y.set_xlabel(s_label)
     ax_pos_y.set_ylabel(m_label)
     ax_pos_y.plot(time_data, [q.y for q in configuration_data], label=r'$y$')
     ax_pos_y.plot(time_data, [q.y for q in desired_pose_data], label=r'$y_d$')
@@ -182,7 +182,7 @@ if __name__ == '__main__':
     fig_velocities = plt.figure()
 
     ax_pos_x_dot = fig_velocities.add_subplot(3, 1, 1)
-    ax_pos_x_dot.set_xlabel(s_label)
+    #ax_pos_x_dot.set_xlabel(s_label)
     ax_pos_x_dot.set_ylabel(lv_label)
     ax_pos_x_dot.plot(time_data, [q_dot.x_dot for q_dot in measured_velocity_data], label=r'$\dot{x}$')
     ax_pos_x_dot.plot(time_data, [q_dot.x_dot for q_dot in desired_velocity_data], label=r'$\dot{x}_d$')
@@ -190,7 +190,7 @@ if __name__ == '__main__':
     ax_pos_x_dot.grid()
 
     ax_pos_y_dot = fig_velocities.add_subplot(3, 1, 2)
-    ax_pos_y_dot.set_xlabel(s_label)
+    #ax_pos_y_dot.set_xlabel(s_label)
     ax_pos_y_dot.set_ylabel(lv_label)
     ax_pos_y_dot.plot(time_data, [q_dot.y_dot for q_dot in measured_velocity_data], label=r'$\dot{y}$')
     ax_pos_y_dot.plot(time_data, [q_dot.y_dot for q_dot in desired_velocity_data], label=r'$\dot{y}_d$')
