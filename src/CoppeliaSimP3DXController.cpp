@@ -98,7 +98,7 @@ CoppeliaSimP3DXController::init() {
     dynamic_feedback_linearization_hparams.kp2 = 4.0;
     dynamic_feedback_linearization_hparams.kd1 = 4.0;
     dynamic_feedback_linearization_hparams.kd2 = 4.0;
-    double xi_0 = 0.4;
+    double xi_0 = 1.0;
     dynamic_feedback_linearization_controller_ptr_ =
         std::make_unique<labrob::DynamicFeedbackLinearizationController>(
             dynamic_feedback_linearization_hparams,
@@ -109,8 +109,8 @@ CoppeliaSimP3DXController::init() {
     // Setup hparams for static feedback linearization and linear controller:
     labrob::StaticFeedbackLinearizationHParams static_feedback_linearization_hparams;
     static_feedback_linearization_hparams.b = 0.75;
-    static_feedback_linearization_hparams.k1 = 1.0;
-    static_feedback_linearization_hparams.k2 = 1.0;
+    static_feedback_linearization_hparams.k1 = 2.0;
+    static_feedback_linearization_hparams.k2 = 2.0;
     static_feedback_linearization_controller_ptr_ =
         std::make_unique<labrob::StaticFeedbackLinearizationController>(
             static_feedback_linearization_hparams
@@ -304,9 +304,9 @@ CoppeliaSimP3DXController::generateDesiredTrajectory(
     TrajectoryType trajectory_type
 ) {
   if (trajectory_type == TrajectoryType::Circular) {
-    double desired_driving_velocity = 0.4;
+    double desired_driving_velocity = 1.0;
     return std::make_unique<labrob::CircularTrajectory>(
-        labrob::Position2D(1.0, 3.0),
+        labrob::Position2D(4.0, 3.0),
         3.0,
         desired_driving_velocity,
         -M_PI / 2.0
@@ -315,16 +315,16 @@ CoppeliaSimP3DXController::generateDesiredTrajectory(
     double desired_steering_velocity = 0.06;
 
     return std::make_unique<labrob::EightShapedTrajectory>(
-        labrob::Pose2D(1.0, 0.0, 0.0),
+        labrob::Pose2D(4.0, 1.0, 0.0),
         desired_steering_velocity
     );
   } else if (trajectory_type == TrajectoryType::Linear) {
     return std::make_unique<labrob::LinearTrajectoryWithConstantDrivingVelocity>(
         labrob::Pose2D(1.0, 0.0, 0.0),
-        0.4
+        1.0
     );
   } else if (trajectory_type == TrajectoryType::Squared) {
-    double desired_driving_velocity = 0.4;
+    double desired_driving_velocity = 1.0;
     double square_length = 4.0;
     return
         std::make_unique<labrob::SquaredTrajectoryWithConstantDrivingVelocity>(
