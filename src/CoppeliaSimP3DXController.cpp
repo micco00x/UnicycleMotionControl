@@ -77,10 +77,10 @@ CoppeliaSimP3DXController::init() {
   simGetObjectPosition(p3dx_unicycle_handle_, -1, p3dx_unicycle_position);
   z_unicycle_ = static_cast<double>(p3dx_unicycle_position[2]);
 
-  TrajectoryType trajectory_type = TrajectoryType::EightShaped;
+  TrajectoryType trajectory_type = TrajectoryType::Squared;
   desired_trajectory_ptr_ = generateDesiredTrajectory(trajectory_type);
 
-  controller_type_ = ControllerType::DynamicFeedbackLinearization;
+  controller_type_ = ControllerType::StaticFeedbackLinearization;
 
   if (controller_type_ == ControllerType::ApproximateLinearization) {
     // Setup hparams for approximate linearization and linear controller:
@@ -174,18 +174,32 @@ CoppeliaSimP3DXController::update() {
     simSetJointTargetVelocity(left_motor_handle_, p3dx_robot_cmd_.getLeftMotorVelocity());
     simSetJointTargetVelocity(right_motor_handle_, p3dx_robot_cmd_.getRightMotorVelocity());
   } else {
-    // Integrate using Euler integration:
+    // Integrate using exact integration, use 2nd order Runge-Kutta integration
+    // in case omega_k is around zero to avoid numerical instabilities:
     double x_k = unicycle_configuration.x();
     double y_k = unicycle_configuration.y();
     double theta_k = unicycle_configuration.theta();
     double v_k = unicycle_cmd.getDrivingVelocity();
     double omega_k = unicycle_cmd.getSteeringVelocity();
     double dt = static_cast<double>(simGetSimulationTimeStep());
-    labrob::UnicycleConfiguration next_unicycle_configuration(
-        x_k + v_k * dt * std::cos(theta_k + omega_k * dt / 2.0),
-        y_k + v_k * dt * std::sin(theta_k + omega_k * dt / 2.0),
-        theta_k + omega_k * dt
-    );
+    labrob::UnicycleConfiguration next_unicycle_configuration;
+    if (std::abs(omega_k) < 1e-3) {
+      // 2nd order Runge-Kutta integration:
+      next_unicycle_configuration = labrob::UnicycleConfiguration(
+          x_k + v_k * dt * std::cos(theta_k + omega_k * dt / 2.0),
+          y_k + v_k * dt * std::sin(theta_k + omega_k * dt / 2.0),
+          theta_k + omega_k * dt
+      );
+    } else {
+      // Exact integration:
+      double theta_next = theta_k + omega_k * dt;
+      next_unicycle_configuration = labrob::UnicycleConfiguration(
+          x_k + v_k / omega_k * (std::sin(theta_next) - std::sin(theta_k)),
+          y_k - v_k / omega_k * (std::cos(theta_next) - std::cos(theta_k)),
+          theta_next
+      );
+    }
+
     simFloat position[3] = {
         static_cast<simFloat>(next_unicycle_configuration.x()),
         static_cast<simFloat>(next_unicycle_configuration.y()),
