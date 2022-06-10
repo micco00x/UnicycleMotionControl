@@ -24,6 +24,7 @@ class CoppeliaSimP3DXController : public CoppeliaSimController {
   labrob::UnicycleConfiguration retrieveP3DXUnicycleConfiguration();
   labrob::Pose2DDerivative retrieveP3DXUnicycleVelocity();
 
+  simInt p3dx_handle_;
   simInt p3dx_unicycle_handle_;
   simInt left_motor_handle_;
   simInt right_motor_handle_;
@@ -51,6 +52,9 @@ class CoppeliaSimP3DXController : public CoppeliaSimController {
   std::ofstream unicycle_desired_pose_log_file_;
   std::ofstream unicycle_measured_velocity_log_file_;
   std::ofstream unicycle_desired_velocity_log_file_;
+
+  bool dynamics_enabled_;
+  double z_unicycle_;
 
   enum class TrajectoryType { Circular, EightShaped, Linear, Squared };
   enum class ControllerType {

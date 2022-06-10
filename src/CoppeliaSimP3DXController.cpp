@@ -42,11 +42,20 @@ CoppeliaSimP3DXController::CoppeliaSimP3DXController()
 
 void
 CoppeliaSimP3DXController::init() {
+  // Enable/disable dynamics:
+  dynamics_enabled_ = false;
+  simSetBooleanParameter(
+      sim_boolparam_dynamics_handling_enabled,
+      dynamics_enabled_
+  );
+
   // Retrieve handles:
+  const simChar* p3dx_object_path = "/PioneerP3DX";
   const simChar* p3dx_unicycle_object_path = "/PioneerP3DX/unicycle_rf";
   const simChar* left_motor_object_path = "/PioneerP3DX/leftMotor";
   const simChar* right_motor_object_path = "/PioneerP3DX/rightMotor";
 
+  p3dx_handle_ = simGetObject(p3dx_object_path, -1, -1, 0);
   p3dx_unicycle_handle_ = simGetObject(p3dx_unicycle_object_path, -1, -1, 0);
   left_motor_handle_ = simGetObject(left_motor_object_path, -1, -1, 0);
   right_motor_handle_ = simGetObject(right_motor_object_path, -1, -1, 0);
@@ -62,6 +71,11 @@ CoppeliaSimP3DXController::init() {
   if (right_motor_handle_ == -1) {
     std::cerr << "Could not get object with object path " << right_motor_object_path << std::endl;
   }
+
+  // Init const z (used only in kinematic simulation):
+  simFloat p3dx_unicycle_position[3];
+  simGetObjectPosition(p3dx_unicycle_handle_, -1, p3dx_unicycle_position);
+  z_unicycle_ = static_cast<double>(p3dx_unicycle_position[2]);
 
   TrajectoryType trajectory_type = TrajectoryType::EightShaped;
   desired_trajectory_ptr_ = generateDesiredTrajectory(trajectory_type);
@@ -155,8 +169,49 @@ CoppeliaSimP3DXController::update() {
   p3dx_robot_cmd_.setVelocitiesFromUnicycleCommand(unicycle_cmd);
 
   // Send commands to robot:
-  simSetJointTargetVelocity(left_motor_handle_, p3dx_robot_cmd_.getLeftMotorVelocity());
-  simSetJointTargetVelocity(right_motor_handle_, p3dx_robot_cmd_.getRightMotorVelocity());
+  if (dynamics_enabled_) {
+    simSetJointTargetVelocity(left_motor_handle_, p3dx_robot_cmd_.getLeftMotorVelocity());
+    simSetJointTargetVelocity(right_motor_handle_, p3dx_robot_cmd_.getRightMotorVelocity());
+  } else {
+    // Integrate using Euler integration:
+    double x_k = unicycle_configuration.x();
+    double y_k = unicycle_configuration.y();
+    double theta_k = unicycle_configuration.theta();
+    double v_k = unicycle_cmd.getDrivingVelocity();
+    double omega_k = unicycle_cmd.getSteeringVelocity();
+    double dt = static_cast<double>(simGetSimulationTimeStep());
+    labrob::UnicycleConfiguration next_unicycle_configuration(
+        x_k + v_k * dt * std::cos(theta_k + omega_k * dt / 2.0),
+        y_k + v_k * dt * std::sin(theta_k + omega_k * dt / 2.0),
+        theta_k + omega_k * dt
+    );
+    simFloat position[3] = {
+        static_cast<simFloat>(next_unicycle_configuration.x()),
+        static_cast<simFloat>(next_unicycle_configuration.y()),
+        static_cast<simFloat>(z_unicycle_)
+    };
+    simFloat orientation[3] = {
+        0.0f,
+        0.0f,
+        static_cast<simFloat>(next_unicycle_configuration.theta())
+    };
+    // Retrieve offset p3dx unicycle (const. through time).
+    simFloat offset_position[3];
+    simGetObjectPosition(p3dx_handle_, p3dx_unicycle_handle_, offset_position);
+    // NOTE: assuming P3DX is moving on x-y plane (const z).
+    simFloat next_p3dx_position[3] = {
+        offset_position[0] * std::cos(orientation[2]) - offset_position[1] * std::sin(orientation[2]) + position[0],
+        offset_position[0] * std::sin(orientation[2]) + offset_position[1] * std::cos(orientation[2]) + position[1],
+        offset_position[2] + position[2]
+    };
+    simFloat next_p3dx_orientation[3] = {
+        orientation[0],
+        orientation[1],
+        orientation[2]
+    };
+    simSetObjectPosition(p3dx_handle_, -1, next_p3dx_position);
+    simSetObjectOrientation(p3dx_handle_, -1, next_p3dx_orientation);
+  }
 
   // Draw P3DX unicycle configuration and desired trajectory:
   if (draw_trajectories_) {
