@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
+SAVE_FIGURES = True
+SHOW_PLOTS = False
+
 class UnicycleCommand:
     def __init__(self, driving_velocity, steering_velocity):
         self.driving_velocity = driving_velocity
@@ -203,4 +206,13 @@ if __name__ == '__main__':
     ax_pos_theta_dot.grid()
 
     # Show plots:
-    plt.show()
+    if SHOW_PLOTS:
+        plt.show()
+
+    # Save figures:
+    if SAVE_FIGURES:
+        dpi = 300.0 # standard DPI for printing use
+        fig_commands.savefig(os.path.join(root_folder, 'unicycle_commands.png'), dpi=dpi)
+        fig_positions.savefig(os.path.join(root_folder, 'positions.png'), dpi=dpi)
+        fig_cartesian_err.savefig(os.path.join(root_folder, 'cartesian_error.png'), dpi=dpi)
+        fig_velocities.savefig(os.path.join(root_folder, 'velocities.png'), dpi=dpi)
