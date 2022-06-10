@@ -93,47 +93,56 @@ if __name__ == '__main__':
 
 
     # Plot unicycle commands:
+    legend_location = 'upper right'
+    plt.rcParams['text.usetex'] = True
+
+    s_label = r'$[\rm{s}]$'
+    m_label = r'$[\rm{m}]$'
+    rad_label = r'$[\rm{rad}]$'
+    lv_label = r'$[\rm{m}/\rm{s}]$'
+    rv_label = r'$[\rm{rad}/\rm{s}]$'
+
     fig_commands = plt.figure()
 
     ax_driving_velocity = fig_commands.add_subplot(2, 1, 1)
-    ax_driving_velocity.set_xlabel('[s]')
-    ax_driving_velocity.set_ylabel('[m/s]')
-    ax_driving_velocity.plot(time_data, [cmd.driving_velocity for cmd in command_data], label='driving velocity')
-    ax_driving_velocity.legend()
+    ax_driving_velocity.set_xlabel(s_label)
+    ax_driving_velocity.set_ylabel(lv_label)
+    ax_driving_velocity.plot(time_data, [cmd.driving_velocity for cmd in command_data], label=r'$v$')
+    ax_driving_velocity.legend(loc=legend_location)
     ax_driving_velocity.grid()
 
     ax_steering_velocity = fig_commands.add_subplot(2, 1, 2)
-    ax_steering_velocity.set_xlabel('[s]')
-    ax_steering_velocity.set_ylabel('[rad/s]')
-    ax_steering_velocity.plot(time_data, [cmd.steering_velocity for cmd in command_data], label='steering velocity')
-    ax_steering_velocity.legend()
+    ax_steering_velocity.set_xlabel(s_label)
+    ax_steering_velocity.set_ylabel(rv_label)
+    ax_steering_velocity.plot(time_data, [cmd.steering_velocity for cmd in command_data], label=r'$\omega$')
+    ax_steering_velocity.legend(loc=legend_location)
     ax_steering_velocity.grid()
 
     # Plot comparison between pose and desired pose:
     fig_positions = plt.figure()
 
     ax_pos_x = fig_positions.add_subplot(3, 1, 1)
-    ax_pos_x.set_xlabel('[s]')
-    ax_pos_x.set_ylabel('[m]')
-    ax_pos_x.plot(time_data, [q.x for q in configuration_data], label='x')
-    ax_pos_x.plot(time_data, [q.x for q in desired_pose_data], label='x des')
-    ax_pos_x.legend()
+    ax_pos_x.set_xlabel(s_label)
+    ax_pos_x.set_ylabel(m_label)
+    ax_pos_x.plot(time_data, [q.x for q in configuration_data], label=r'$x$')
+    ax_pos_x.plot(time_data, [q.x for q in desired_pose_data], label=r'$x_d$')
+    ax_pos_x.legend(loc=legend_location)
     ax_pos_x.grid()
 
     ax_pos_y = fig_positions.add_subplot(3, 1, 2)
-    ax_pos_y.set_xlabel('[s]')
-    ax_pos_y.set_ylabel('[m]')
-    ax_pos_y.plot(time_data, [q.y for q in configuration_data], label='y')
-    ax_pos_y.plot(time_data, [q.y for q in desired_pose_data], label='y des')
-    ax_pos_y.legend()
+    ax_pos_y.set_xlabel(s_label)
+    ax_pos_y.set_ylabel(m_label)
+    ax_pos_y.plot(time_data, [q.y for q in configuration_data], label=r'$y$')
+    ax_pos_y.plot(time_data, [q.y for q in desired_pose_data], label=r'$y_d$')
+    ax_pos_y.legend(loc=legend_location)
     ax_pos_y.grid()
 
     ax_pos_theta = fig_positions.add_subplot(3, 1, 3)
-    ax_pos_theta.set_xlabel('[s]')
-    ax_pos_theta.set_ylabel('[rad]')
-    ax_pos_theta.plot(time_data, [q.theta for q in configuration_data], label='theta')
-    ax_pos_theta.plot(time_data, [q.theta for q in desired_pose_data], label='theta des')
-    ax_pos_theta.legend()
+    ax_pos_theta.set_xlabel(s_label)
+    ax_pos_theta.set_ylabel(rad_label)
+    ax_pos_theta.plot(time_data, [q.theta for q in configuration_data], label=r'$\theta$')
+    ax_pos_theta.plot(time_data, [q.theta for q in desired_pose_data], label=r'$\theta_d$')
+    ax_pos_theta.legend(loc=legend_location)
     ax_pos_theta.grid()
 
     # Plot cartesian error:
@@ -145,37 +154,37 @@ if __name__ == '__main__':
     fig_cartesian_err = plt.figure()
 
     ax_cartesian_err = fig_cartesian_err.add_subplot(1, 1, 1)
-    ax_cartesian_err.set_xlabel('[s]')
-    ax_cartesian_err.set_ylabel('[m]')
-    ax_cartesian_err.plot(time_data, cartesian_error_data, label='e_p')
-    ax_cartesian_err.legend()
+    ax_cartesian_err.set_xlabel(s_label)
+    ax_cartesian_err.set_ylabel(m_label)
+    ax_cartesian_err.plot(time_data, cartesian_error_data, label=r'$e_p$')
+    ax_cartesian_err.legend(loc=legend_location)
     ax_cartesian_err.grid()
 
     # Plot unicycle velocity:
     fig_velocities = plt.figure()
 
     ax_pos_x_dot = fig_velocities.add_subplot(3, 1, 1)
-    ax_pos_x_dot.set_xlabel('[s]')
-    ax_pos_x_dot.set_ylabel('[m/s]')
-    ax_pos_x_dot.plot(time_data, [q_dot.x_dot for q_dot in measured_velocity_data], label='x_dot')
-    ax_pos_x_dot.plot(time_data, [q_dot.x_dot for q_dot in desired_velocity_data], label='x_dot des')
-    ax_pos_x_dot.legend()
+    ax_pos_x_dot.set_xlabel(s_label)
+    ax_pos_x_dot.set_ylabel(lv_label)
+    ax_pos_x_dot.plot(time_data, [q_dot.x_dot for q_dot in measured_velocity_data], label=r'$\dot{x}$')
+    ax_pos_x_dot.plot(time_data, [q_dot.x_dot for q_dot in desired_velocity_data], label=r'$\dot{x}_d$')
+    ax_pos_x_dot.legend(loc=legend_location)
     ax_pos_x_dot.grid()
 
     ax_pos_y_dot = fig_velocities.add_subplot(3, 1, 2)
-    ax_pos_y_dot.set_xlabel('[s]')
-    ax_pos_y_dot.set_ylabel('[m/s]')
-    ax_pos_y_dot.plot(time_data, [q_dot.y_dot for q_dot in measured_velocity_data], label='y_dot')
-    ax_pos_y_dot.plot(time_data, [q_dot.y_dot for q_dot in desired_velocity_data], label='y_dot des')
-    ax_pos_y_dot.legend()
+    ax_pos_y_dot.set_xlabel(s_label)
+    ax_pos_y_dot.set_ylabel(lv_label)
+    ax_pos_y_dot.plot(time_data, [q_dot.y_dot for q_dot in measured_velocity_data], label=r'$\dot{y}$')
+    ax_pos_y_dot.plot(time_data, [q_dot.y_dot for q_dot in desired_velocity_data], label=r'$\dot{y}_d$')
+    ax_pos_y_dot.legend(loc=legend_location)
     ax_pos_y_dot.grid()
 
     ax_pos_theta_dot = fig_velocities.add_subplot(3, 1, 3)
-    ax_pos_theta_dot.set_xlabel('[s]')
-    ax_pos_theta_dot.set_ylabel('[rad/s]')
-    ax_pos_theta_dot.plot(time_data, [q_dot.theta_dot for q_dot in measured_velocity_data], label='theta_dot')
-    ax_pos_theta_dot.plot(time_data, [q_dot.theta_dot for q_dot in desired_velocity_data], label='theta_dot des')
-    ax_pos_theta_dot.legend()
+    ax_pos_theta_dot.set_xlabel(s_label)
+    ax_pos_theta_dot.set_ylabel(rv_label)
+    ax_pos_theta_dot.plot(time_data, [q_dot.theta_dot for q_dot in measured_velocity_data], label=r'$\dot{\theta}$')
+    ax_pos_theta_dot.plot(time_data, [q_dot.theta_dot for q_dot in desired_velocity_data], label=r'$\dot{\theta}_d$')
+    ax_pos_theta_dot.legend(loc=legend_location)
     ax_pos_theta_dot.grid()
 
     # Show plots:
