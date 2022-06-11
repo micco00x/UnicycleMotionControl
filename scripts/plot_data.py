@@ -122,26 +122,30 @@ if __name__ == '__main__':
     rv_label = r'$[\rm{rad}/\rm{s}]$'
 
     fig_commands = plt.figure()
+    fig_commands.subplots_adjust(hspace=0.5)
 
     ax_driving_velocity = fig_commands.add_subplot(2, 1, 1)
-    #ax_driving_velocity.set_xlabel(s_label)
+    ax_driving_velocity.set_title('driving velocity')
+    ax_driving_velocity.set_xlabel(s_label)
     ax_driving_velocity.set_ylabel(lv_label)
     ax_driving_velocity.plot(time_data, [cmd.driving_velocity for cmd in command_data], label=r'$v$')
-    ax_driving_velocity.legend(loc=legend_location)
+    #ax_driving_velocity.legend(loc=legend_location)
     ax_driving_velocity.grid()
 
     ax_steering_velocity = fig_commands.add_subplot(2, 1, 2)
+    ax_steering_velocity.set_title('steering velocity')
     ax_steering_velocity.set_xlabel(s_label)
     ax_steering_velocity.set_ylabel(rv_label)
     ax_steering_velocity.plot(time_data, [cmd.steering_velocity for cmd in command_data], label=r'$\omega$')
-    ax_steering_velocity.legend(loc=legend_location)
+    #ax_steering_velocity.legend(loc=legend_location)
     ax_steering_velocity.grid()
 
     # Plot comparison between pose and desired pose:
     fig_positions = plt.figure()
+    fig_positions.subplots_adjust(hspace=0.5)
 
     ax_pos_x = fig_positions.add_subplot(3, 1, 1)
-    #ax_pos_x.set_xlabel(s_label)
+    ax_pos_x.set_xlabel(s_label)
     ax_pos_x.set_ylabel(m_label)
     ax_pos_x.plot(time_data, [q.x for q in configuration_data], label=r'$x$')
     ax_pos_x.plot(time_data, [q.x for q in desired_pose_data], label=r'$x_d$')
@@ -149,7 +153,7 @@ if __name__ == '__main__':
     ax_pos_x.grid()
 
     ax_pos_y = fig_positions.add_subplot(3, 1, 2)
-    #ax_pos_y.set_xlabel(s_label)
+    ax_pos_y.set_xlabel(s_label)
     ax_pos_y.set_ylabel(m_label)
     ax_pos_y.plot(time_data, [q.y for q in configuration_data], label=r'$y$')
     ax_pos_y.plot(time_data, [q.y for q in desired_pose_data], label=r'$y_d$')
@@ -173,17 +177,19 @@ if __name__ == '__main__':
     fig_cartesian_err = plt.figure()
 
     ax_cartesian_err = fig_cartesian_err.add_subplot(1, 1, 1)
+    ax_cartesian_err.set_title('tracking error norm')
     ax_cartesian_err.set_xlabel(s_label)
     ax_cartesian_err.set_ylabel(m_label)
     ax_cartesian_err.plot(time_data, cartesian_error_data, label=r'$e_p$')
-    ax_cartesian_err.legend(loc=legend_location)
+    #ax_cartesian_err.legend(loc=legend_location)
     ax_cartesian_err.grid()
 
     # Plot unicycle velocity:
     fig_velocities = plt.figure()
+    fig_velocities.subplots_adjust(hspace=0.5)
 
     ax_pos_x_dot = fig_velocities.add_subplot(3, 1, 1)
-    #ax_pos_x_dot.set_xlabel(s_label)
+    ax_pos_x_dot.set_xlabel(s_label)
     ax_pos_x_dot.set_ylabel(lv_label)
     ax_pos_x_dot.plot(time_data, [q_dot.x_dot for q_dot in measured_velocity_data], label=r'$\dot{x}$')
     ax_pos_x_dot.plot(time_data, [q_dot.x_dot for q_dot in desired_velocity_data], label=r'$\dot{x}_d$')
@@ -191,7 +197,7 @@ if __name__ == '__main__':
     ax_pos_x_dot.grid()
 
     ax_pos_y_dot = fig_velocities.add_subplot(3, 1, 2)
-    #ax_pos_y_dot.set_xlabel(s_label)
+    ax_pos_y_dot.set_xlabel(s_label)
     ax_pos_y_dot.set_ylabel(lv_label)
     ax_pos_y_dot.plot(time_data, [q_dot.y_dot for q_dot in measured_velocity_data], label=r'$\dot{y}$')
     ax_pos_y_dot.plot(time_data, [q_dot.y_dot for q_dot in desired_velocity_data], label=r'$\dot{y}_d$')
