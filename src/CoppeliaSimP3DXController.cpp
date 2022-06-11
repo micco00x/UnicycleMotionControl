@@ -326,7 +326,7 @@ CoppeliaSimP3DXController::generateDesiredTrajectory(
         -M_PI / 2.0
       );
   } else if (trajectory_type == TrajectoryType::EightShaped) {
-    double desired_steering_velocity = 0.06;
+    double desired_steering_velocity = 0.6;
 
     return std::make_unique<labrob::EightShapedTrajectory>(
         labrob::Pose2D(4.0, 1.0, 0.0),
@@ -339,7 +339,7 @@ CoppeliaSimP3DXController::generateDesiredTrajectory(
     );
   } else if (trajectory_type == TrajectoryType::Squared) {
     double desired_driving_velocity = 1.0;
-    double square_length = 4.0;
+    double square_length = 5.0;
     return
         std::make_unique<labrob::SquaredTrajectoryWithConstantDrivingVelocity>(
             static_cast<double>(simGetSimulationTime()),
