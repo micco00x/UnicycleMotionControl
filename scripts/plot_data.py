@@ -95,8 +95,9 @@ if __name__ == '__main__':
             theta_dot = float(data[2])
             desired_velocity_data.append(UnicycleVelocity(x_dot, y_dot, theta_dot))
 
-    max_t = 16.0
+    max_t = math.inf
     # Find id of element in time_data such that it is greater than max_t:
+    idx_max_t = len(time_data)
     for idx, t in enumerate(time_data):
         if (t >= max_t):
             idx_max_t = idx
