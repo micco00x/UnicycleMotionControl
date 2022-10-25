@@ -14,6 +14,8 @@ class UnicycleTrajectory {
   virtual double getDesiredDrivingVelocity(double time) const = 0;
   double getDesiredSteeringVelocity(double time) const;
 
+  virtual double getDuration() const = 0;
+
 }; // end class UnicycleTrajectory
 
 } // end namespace labrob

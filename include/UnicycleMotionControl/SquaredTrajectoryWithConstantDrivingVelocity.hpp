@@ -20,6 +20,8 @@ class SquaredTrajectoryWithConstantDrivingVelocity : public UnicycleTrajectory {
 
   double getDesiredDrivingVelocity(double time) const override;
 
+  double getDuration() const override;
+
  protected:
   double vd_;
   double x0_, y0_, theta0_;

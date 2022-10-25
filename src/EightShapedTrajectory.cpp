@@ -59,4 +59,10 @@ EightShapedTrajectory::getDesiredDrivingVelocity(double time) const {
   return std::sqrt(std::pow(q_dot.x_dot(), 2.0) + std::pow(q_dot.y_dot(), 2.0));
 }
 
+double
+EightShapedTrajectory::getDuration() const {
+  // NOTE: desired steering velocity in constant during the whole trajectory.
+  return 4.0 * M_PI / desired_steering_velocity_;
+}
+
 } // end namespace labrob

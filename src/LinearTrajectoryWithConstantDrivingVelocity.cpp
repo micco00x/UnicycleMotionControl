@@ -52,5 +52,10 @@ LinearTrajectoryWithConstantDrivingVelocity::getDesiredDrivingVelocity(double ti
   return desired_driving_velocity_;
 }
 
+double
+LinearTrajectoryWithConstantDrivingVelocity::getDuration() const {
+  return 10.0;
+}
+
 
 } // end namespace labrob

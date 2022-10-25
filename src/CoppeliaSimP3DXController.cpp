@@ -138,6 +138,11 @@ void
 CoppeliaSimP3DXController::update() {
   double time = static_cast<double>(simGetSimulationTime());
 
+  // Force return if trajectory execution is terminated.
+  if (time >= desired_trajectory_ptr_->getDuration()) {
+    return;
+  }
+
   labrob::UnicycleConfiguration unicycle_configuration = retrieveP3DXUnicycleConfiguration();
   labrob::Pose2DDerivative unicycle_velocity = retrieveP3DXUnicycleVelocity();
 

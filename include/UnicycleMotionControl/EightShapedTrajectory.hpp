@@ -18,6 +18,8 @@ class EightShapedTrajectory : public UnicycleTrajectory {
 
   double getDesiredDrivingVelocity(double time) const override;
 
+  double getDuration() const override;
+
  protected:
   const double R1_ = 3.0;
   const double R2_ = 3.0;

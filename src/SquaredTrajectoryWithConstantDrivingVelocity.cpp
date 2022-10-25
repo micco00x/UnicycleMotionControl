@@ -109,7 +109,15 @@ SquaredTrajectoryWithConstantDrivingVelocity::eval_ddt(double time) const {
 
 double
 SquaredTrajectoryWithConstantDrivingVelocity::getDesiredDrivingVelocity(double time) const {
-  return vd_;
+  if (t0_ <= time && time < t4_) {
+    return vd_;
+  }
+  return 0.0;
+}
+
+double
+SquaredTrajectoryWithConstantDrivingVelocity::getDuration() const {
+  return t4_ - t0_;
 }
 
 } // end namespace labrob

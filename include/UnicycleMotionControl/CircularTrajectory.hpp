@@ -20,6 +20,8 @@ class CircularTrajectory : public UnicycleTrajectory {
 
   double getDesiredDrivingVelocity(double time) const override;
 
+  double getDuration() const override;
+
  protected:
   labrob::Position2D center_;
   double radius_;

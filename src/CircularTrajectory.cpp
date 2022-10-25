@@ -59,4 +59,10 @@ CircularTrajectory::getDesiredDrivingVelocity(double time) const {
   return desired_driving_velocity_;
 }
 
+double
+CircularTrajectory::getDuration() const {
+  // NOTE: desired steering velocity in constant during the whole trajectory.
+  return 2.0 * M_PI / desired_steering_velocity_;
+}
+
 } // end namespace labrob
