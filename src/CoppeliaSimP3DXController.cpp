@@ -1,3 +1,4 @@
+#include <UnicycleMotionControl/BackAndForthTrajectory.hpp>
 #include <UnicycleMotionControl/CoppeliaSimP3DXController.hpp>
 #include <UnicycleMotionControl/CircularTrajectory.hpp>
 #include <UnicycleMotionControl/CircularTrajectoryWithNonConstantVelocity.hpp>
@@ -323,7 +324,13 @@ std::unique_ptr<labrob::UnicycleTrajectory>
 CoppeliaSimP3DXController::generateDesiredTrajectory(
     TrajectoryType trajectory_type
 ) {
-  if (trajectory_type == TrajectoryType::Circular) {
+  if (trajectory_type == TrajectoryType::BackAndForth) {
+    return std::make_unique<labrob::BackAndForthTrajectory>(
+      labrob::Position2D(1.0, 3.0),
+      2.0,
+      2.0
+    );
+  } else if (trajectory_type == TrajectoryType::Circular) {
     double desired_driving_velocity = 1.0;
     return std::make_unique<labrob::CircularTrajectory>(
         labrob::Position2D(4.0, 4.0),
