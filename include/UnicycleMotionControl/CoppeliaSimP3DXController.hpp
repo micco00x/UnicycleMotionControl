@@ -56,7 +56,7 @@ class CoppeliaSimP3DXController : public CoppeliaSimController {
   bool dynamics_enabled_;
   double z_unicycle_;
 
-  enum class TrajectoryType { Circular, EightShaped, Linear, Squared };
+  enum class TrajectoryType { Circular, CircularWithNonConstantVelocity, EightShaped, Linear, Squared };
   enum class ControllerType {
       ApproximateLinearization,
       DynamicFeedbackLinearization,

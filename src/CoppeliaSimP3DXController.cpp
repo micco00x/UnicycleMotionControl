@@ -1,5 +1,6 @@
 #include <UnicycleMotionControl/CoppeliaSimP3DXController.hpp>
 #include <UnicycleMotionControl/CircularTrajectory.hpp>
+#include <UnicycleMotionControl/CircularTrajectoryWithNonConstantVelocity.hpp>
 #include <UnicycleMotionControl/EightShapedTrajectory.hpp>
 #include <UnicycleMotionControl/LinearTrajectoryWithConstantDrivingVelocity.hpp>
 #include <UnicycleMotionControl/SquaredTrajectoryWithConstantDrivingVelocity.hpp>
@@ -330,6 +331,13 @@ CoppeliaSimP3DXController::generateDesiredTrajectory(
         desired_driving_velocity,
         -M_PI / 2.0
       );
+  } else if (trajectory_type == TrajectoryType::CircularWithNonConstantVelocity) {
+    return std::make_unique<labrob::CircularTrajectoryWithNonConstantVelocity>(
+        labrob::Position2D(4.0, 4.0),
+        3.0,
+        1.0,
+        -M_PI / 2.0
+    );
   } else if (trajectory_type == TrajectoryType::EightShaped) {
     double desired_steering_velocity = 0.6;
 
