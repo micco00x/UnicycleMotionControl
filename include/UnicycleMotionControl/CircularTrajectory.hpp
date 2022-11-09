@@ -11,7 +11,8 @@ class CircularTrajectory : public UnicycleTrajectory {
       const labrob::Position2D& center,
       double radius,
       double desired_driving_velocity,
-      double phi
+      double phi,
+      double duration
   );
 
   labrob::Pose2D eval(double time) const override;
@@ -28,6 +29,7 @@ class CircularTrajectory : public UnicycleTrajectory {
   double desired_driving_velocity_;
   double desired_steering_velocity_;
   double phi_;
+  double duration_;
 }; // end class CircularTrajectory
 
 } // end namespace labrob

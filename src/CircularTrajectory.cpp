@@ -8,12 +8,14 @@ CircularTrajectory::CircularTrajectory(
     const labrob::Position2D& center,
     double radius,
     double desired_driving_velocity,
-    double phi
+    double phi,
+    double duration
 ) : center_(center),
     radius_(radius),
     desired_driving_velocity_(desired_driving_velocity),
     desired_steering_velocity_(desired_driving_velocity / radius),
-    phi_(phi) { }
+    phi_(phi),
+    duration_(duration) { }
 
 labrob::Pose2D
 CircularTrajectory::eval(double time) const {
@@ -61,8 +63,7 @@ CircularTrajectory::getDesiredDrivingVelocity(double time) const {
 
 double
 CircularTrajectory::getDuration() const {
-  // NOTE: desired steering velocity in constant during the whole trajectory.
-  return 2.0 * M_PI / desired_steering_velocity_;
+  return duration_;
 }
 
 } // end namespace labrob

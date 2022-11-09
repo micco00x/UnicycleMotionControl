@@ -332,11 +332,13 @@ CoppeliaSimP3DXController::generateDesiredTrajectory(
     );
   } else if (trajectory_type == TrajectoryType::Circular) {
     double desired_driving_velocity = 1.0;
+    double radius = 3.0;
     return std::make_unique<labrob::CircularTrajectory>(
         labrob::Position2D(4.0, 4.0),
-        3.0,
+        radius,
         desired_driving_velocity,
-        -M_PI / 2.0
+        -M_PI / 2.0,
+        2.0 * M_PI * radius / desired_driving_velocity
       );
   } else if (trajectory_type == TrajectoryType::CircularWithNonConstantVelocity) {
     return std::make_unique<labrob::CircularTrajectoryWithNonConstantVelocity>(
