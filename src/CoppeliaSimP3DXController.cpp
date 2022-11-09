@@ -79,6 +79,11 @@ CoppeliaSimP3DXController::init() {
   simGetObjectPosition(p3dx_unicycle_handle_, -1, p3dx_unicycle_position);
   z_unicycle_ = static_cast<double>(p3dx_unicycle_position[2]);
 
+  // Set P3DX to initial unicycle configuration (by default taken from sim):
+  labrob::UnicycleConfiguration initial_unicycle_configuration =
+      retrieveP3DXUnicycleConfiguration();
+  setP3DXConfigurationFromUnicycleConfiguration(initial_unicycle_configuration);
+
   TrajectoryType trajectory_type = TrajectoryType::Circular;
   desired_trajectory_ptr_ = generateDesiredTrajectory(trajectory_type);
 
@@ -207,32 +212,7 @@ CoppeliaSimP3DXController::update() {
       );
     }
 
-    simFloat position[3] = {
-        static_cast<simFloat>(next_unicycle_configuration.x()),
-        static_cast<simFloat>(next_unicycle_configuration.y()),
-        static_cast<simFloat>(z_unicycle_)
-    };
-    simFloat orientation[3] = {
-        0.0f,
-        0.0f,
-        static_cast<simFloat>(next_unicycle_configuration.theta())
-    };
-    // Retrieve offset p3dx unicycle (const. through time).
-    simFloat offset_position[3];
-    simGetObjectPosition(p3dx_handle_, p3dx_unicycle_handle_, offset_position);
-    // NOTE: assuming P3DX is moving on x-y plane (const z).
-    simFloat next_p3dx_position[3] = {
-        offset_position[0] * std::cos(orientation[2]) - offset_position[1] * std::sin(orientation[2]) + position[0],
-        offset_position[0] * std::sin(orientation[2]) + offset_position[1] * std::cos(orientation[2]) + position[1],
-        offset_position[2] + position[2]
-    };
-    simFloat next_p3dx_orientation[3] = {
-        orientation[0],
-        orientation[1],
-        orientation[2]
-    };
-    simSetObjectPosition(p3dx_handle_, -1, next_p3dx_position);
-    simSetObjectOrientation(p3dx_handle_, -1, next_p3dx_orientation);
+    setP3DXConfigurationFromUnicycleConfiguration(next_unicycle_configuration);
   }
 
   // Draw P3DX unicycle configuration and desired trajectory:
@@ -320,6 +300,37 @@ CoppeliaSimP3DXController::retrieveP3DXUnicycleVelocity() {
   );
 }
 
+void
+CoppeliaSimP3DXController::setP3DXConfigurationFromUnicycleConfiguration(
+    const labrob::UnicycleConfiguration& unicycle_configuration) {
+  simFloat position[3] = {
+        static_cast<simFloat>(unicycle_configuration.x()),
+        static_cast<simFloat>(unicycle_configuration.y()),
+        static_cast<simFloat>(z_unicycle_)
+    };
+    simFloat orientation[3] = {
+        0.0f,
+        0.0f,
+        static_cast<simFloat>(unicycle_configuration.theta())
+    };
+    // Retrieve offset p3dx unicycle (const. through time).
+    simFloat offset_position[3];
+    simGetObjectPosition(p3dx_handle_, p3dx_unicycle_handle_, offset_position);
+    // NOTE: assuming P3DX is moving on x-y plane (const z).
+    simFloat next_p3dx_position[3] = {
+        offset_position[0] * std::cos(orientation[2]) - offset_position[1] * std::sin(orientation[2]) + position[0],
+        offset_position[0] * std::sin(orientation[2]) + offset_position[1] * std::cos(orientation[2]) + position[1],
+        offset_position[2] + position[2]
+    };
+    simFloat next_p3dx_orientation[3] = {
+        orientation[0],
+        orientation[1],
+        orientation[2]
+    };
+    simSetObjectPosition(p3dx_handle_, -1, next_p3dx_position);
+    simSetObjectOrientation(p3dx_handle_, -1, next_p3dx_orientation);
+}
+
 std::unique_ptr<labrob::UnicycleTrajectory>
 CoppeliaSimP3DXController::generateDesiredTrajectory(
     TrajectoryType trajectory_type
@@ -333,12 +344,13 @@ CoppeliaSimP3DXController::generateDesiredTrajectory(
   } else if (trajectory_type == TrajectoryType::Circular) {
     double desired_driving_velocity = 1.0;
     double radius = 3.0;
+    double duration = 2.0 * M_PI * radius / desired_driving_velocity;
     return std::make_unique<labrob::CircularTrajectory>(
         labrob::Position2D(4.0, 4.0),
         radius,
         desired_driving_velocity,
         -M_PI / 2.0,
-        2.0 * M_PI * radius / desired_driving_velocity
+        duration
       );
   } else if (trajectory_type == TrajectoryType::CircularWithNonConstantVelocity) {
     return std::make_unique<labrob::CircularTrajectoryWithNonConstantVelocity>(

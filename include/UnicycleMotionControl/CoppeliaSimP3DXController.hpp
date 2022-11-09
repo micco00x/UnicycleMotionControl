@@ -23,6 +23,9 @@ class CoppeliaSimP3DXController : public CoppeliaSimController {
  protected:
   labrob::UnicycleConfiguration retrieveP3DXUnicycleConfiguration();
   labrob::Pose2DDerivative retrieveP3DXUnicycleVelocity();
+  void setP3DXConfigurationFromUnicycleConfiguration(
+      const labrob::UnicycleConfiguration& unicycle_configuration
+  );
 
   simInt p3dx_handle_;
   simInt p3dx_unicycle_handle_;
