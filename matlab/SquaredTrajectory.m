@@ -74,9 +74,17 @@ classdef SquaredTrajectory
             thetad = atan2(yd_dot, xd_dot);
             thetad_dot = 0.0;
 
-            pose = [xd, yd, thetad];
-            pose_derivative = [xd_dot, yd_dot, thetad_dot];
-            pose_second_derivative = [0.0, 0.0, 0.0];
+            pose = [xd; yd; thetad];
+            pose_derivative = [xd_dot; yd_dot; thetad_dot];
+            pose_second_derivative = [0.0; 0.0; 0.0];
+        end
+
+        function desired_driving_velocity = getDesiredDrivingVelocity(obj, ~)
+            desired_driving_velocity = obj.desired_driving_velocity;
+        end
+
+        function desired_steering_velocity = getDesiredSteeringVelocity(~, ~)
+            desired_steering_velocity = 0.0;
         end
     end
 end

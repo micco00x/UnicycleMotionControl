@@ -34,9 +34,17 @@ classdef CircularTrajectory
             thetad_dot = (yd_ddot * xd_dot - xd_ddot * yd_dot) / (xd_dot ^ 2.0 + yd_dot ^ 2.0);
             thetad_ddot = 0.0;
 
-            pose = [xd, yd, thetad];
-            pose_derivative = [xd_dot, yd_dot, thetad_dot];
-            pose_second_derivative = [xd_ddot, yd_ddot, thetad_ddot];
+            pose = [xd; yd; thetad];
+            pose_derivative = [xd_dot; yd_dot; thetad_dot];
+            pose_second_derivative = [xd_ddot; yd_ddot; thetad_ddot];
+        end
+
+        function desired_driving_velocity = getDesiredDrivingVelocity(obj, ~)
+            desired_driving_velocity = obj.desired_driving_velocity;
+        end
+
+        function desired_steering_velocity = getDesiredSteeringVelocity(obj, ~)
+            desired_steering_velocity = obj.desired_steering_velocity;
         end
     end
 end

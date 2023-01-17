@@ -44,10 +44,19 @@ squared_trajectory = SquaredTrajectory( ...
     squared_trajectory_square_length ...
 );
 
-% Trajectory:
-trajectory_type = TrajectoryType.Circular; % Circular, EightShaped, Squared
+% Approximate linearization controller hparams:
+approximate_linearization_controller_zeta = 0.7;
+approximate_linearization_controller_a = 2.0;
+approximate_linearization_controller = ApproximateLinearizationController( ...
+    approximate_linearization_controller_zeta, ...
+    approximate_linearization_controller_a ...
+);
 
-switch trajectory_type
+% Desired trajectory and controller:
+desired_trajectory_type = TrajectoryType.Circular; % Circular, EightShaped, Squared
+controller_type = ControllerType.ApproximateLinearization; % ApproximateLinearization
+
+switch desired_trajectory_type
     case TrajectoryType.Circular
         desired_trajectory = circular_trajectory;
     case TrajectoryType.EightShaped
@@ -61,27 +70,60 @@ end
 
 iterations = fix(desired_trajectory.duration / sampling_interval);
 
-% Commands to be applied to the unicycle:
-control_input = [1.0; 0.2]; % [m/s], [rad/s]
-
 % Variables to be used for plotting:
 time = linspace(0.0, iterations * sampling_interval, iterations);
 unicycle_configuration_log = zeros(iterations, 3);
 unicycle_configuration_ref_log = zeros(iterations, 3);
+control_input_log = zeros(iterations, 2);
+tracking_error_log = zeros(iterations, 1);
 
 % Run simulation:
 for iter = 1:iterations
-    % Simulation step:
-    unicycle_configuration = simulate_unicycle_motion(unicycle_configuration, control_input, sampling_interval);
+    % Compute commands using selected controller:
+    switch controller_type
+        case ControllerType.ApproximateLinearization
+            control_input = approximate_linearization_controller.compute_commands(time(iter), unicycle_configuration, desired_trajectory);
+        otherwise
+            disp('Controller must be of the type ApproximateLinearization.');
+    end
 
     [unicycle_configuration_ref, ~, ~] = desired_trajectory.eval(time(iter));
 
     % Log:
     unicycle_configuration_log(iter, :) = unicycle_configuration;
     unicycle_configuration_ref_log(iter, :) = unicycle_configuration_ref;
+    control_input_log(iter, :) = control_input;
+    tracking_error_log(iter, 1) = norm(unicycle_configuration_ref(1:2) - unicycle_configuration(1:2));
+
+    % Simulation step:
+    unicycle_configuration = simulate_unicycle_motion(unicycle_configuration, control_input, sampling_interval);
 end
 
 % Draw unicycle given the trajectory:
+figure
 draw_unicycle_from_trajectory(unicycle_configuration_log, num_unicycles_to_draw, 'black');
 hold on
 draw_unicycle_from_trajectory(unicycle_configuration_ref_log, num_unicycles_to_draw, 'green');
+
+% Plot commands:
+figure;
+subplot(2, 1, 1);
+plot(time, control_input_log(:, 1));
+grid on;
+title('driving velocity');
+xlabel('[s]');
+ylabel('[m/s]');
+subplot(2, 1, 2);
+plot(time, control_input_log(:, 2));
+grid on;
+title('steering velocity');
+xlabel('[s]');
+ylabel('[rad/s]');
+
+% Plot tracking error:
+figure;
+plot(time, tracking_error_log);
+grid on;
+title('tracking error norm');
+xlabel('[s]');
+ylabel('[m]');
