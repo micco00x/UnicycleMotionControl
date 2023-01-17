@@ -34,7 +34,7 @@ classdef ApproximateLinearizationController
             e3 = deltatheta;
             
             k1 = 2.0 * obj.zeta * obj.a;
-            k2 = (obj.a ^ 2.0 - desired_steering_velocity ^ 2) / desired_driving_velocity;
+            k2 = (obj.a ^ 2.0 - desired_steering_velocity ^ 2.0) / desired_driving_velocity;
             k3 = k1;
             
             u1 = -k1 * e1;

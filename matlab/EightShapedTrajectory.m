@@ -45,8 +45,9 @@ classdef EightShapedTrajectory
             desired_driving_velocity = sqrt(xd_dot ^ 2.0 + yd_dot ^ 2.0);
         end
 
-        function desired_steering_velocity = getDesiredSteeringVelocity(obj, ~)
-            desired_steering_velocity = obj.desired_steering_velocity;
+        function desired_steering_velocity = getDesiredSteeringVelocity(obj, time)
+            [~, pose_derivative, ~] = obj.eval(time);
+            desired_steering_velocity = pose_derivative(3);
         end
     end
 end
