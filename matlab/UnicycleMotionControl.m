@@ -24,7 +24,14 @@ circular_trajectory = CircularTrajectory( ...
     circular_trajectory_duration ...
 );
 
-desired_trajectory = circular_trajectory;
+eight_shaped_trajectory_starting_pose = [4.0; 1.0; 1.0];
+eight_shaped_trajectory_desired_steering_velocity = 0.6;
+eight_shaped_trajectory = EightShapedTrajectory( ...
+    eight_shaped_trajectory_starting_pose, ...
+    eight_shaped_trajectory_desired_steering_velocity ...
+);
+
+desired_trajectory = eight_shaped_trajectory; % circular_trajectory, eight_shaped_trajectory
 
 iterations = fix(desired_trajectory.duration / sampling_interval);
 
@@ -40,7 +47,7 @@ unicycle_configuration_ref_log = zeros(iterations, 3);
 for iter = 1:iterations
     % Simulation step:
     unicycle_configuration = simulate_unicycle_motion(unicycle_configuration, control_input, sampling_interval);
-    
+
     [unicycle_configuration_ref, ~, ~] = desired_trajectory.eval(time(iter));
 
     % Log:
