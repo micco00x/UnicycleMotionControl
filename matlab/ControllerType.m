@@ -1,5 +1,5 @@
 classdef ControllerType
     enumeration
-        ApproximateLinearization, DynamicFeedbackLinearization
+        ApproximateLinearization, DynamicFeedbackLinearization, StaticFeedbackLinearization
     end
 end

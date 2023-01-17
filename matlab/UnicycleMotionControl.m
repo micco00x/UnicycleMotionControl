@@ -68,9 +68,19 @@ dynamic_feedback_linearization_controller = DynamicFeedbackLinearizationControll
     dynamic_feedback_linearization_controller_xi_0 ...
 );
 
+% Static feedback linearization controller hparams:
+static_feedback_linearization_controller_b = 0.75;
+static_feedback_linearization_controller_k1 = 2.0;
+static_feedback_linearization_controller_k2 = 2.0;
+static_feedback_linearization_controller = StaticFeedbackLinearizationController( ...
+    static_feedback_linearization_controller_b, ...
+    static_feedback_linearization_controller_k1, ...
+    static_feedback_linearization_controller_k2 ...
+);
+
 % Desired trajectory and controller:
 desired_trajectory_type = TrajectoryType.Squared; % Circular, EightShaped, Squared
-controller_type = ControllerType.DynamicFeedbackLinearization; % ApproximateLinearization, DynamicFeedbackLinearization
+controller_type = ControllerType.StaticFeedbackLinearization; % ApproximateLinearization, DynamicFeedbackLinearization, StaticFeedbackLinearization
 
 switch desired_trajectory_type
     case TrajectoryType.Circular
@@ -101,6 +111,8 @@ for iter = 1:iterations
             control_input = approximate_linearization_controller.compute_commands(time(iter), unicycle_configuration, desired_trajectory);
         case ControllerType.DynamicFeedbackLinearization
             control_input = dynamic_feedback_linearization_controller.compute_commands(time(iter), unicycle_configuration, unicycle_velocity, desired_trajectory);
+        case ControllerType.StaticFeedbackLinearization
+            control_input = static_feedback_linearization_controller.compute_commands(time(iter), unicycle_configuration, desired_trajectory);
         otherwise
             disp('Controller must be of the type ApproximateLinearization.');
     end
