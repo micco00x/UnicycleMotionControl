@@ -1,4 +1,4 @@
-function unicycle_configuration= simulate_unicycle_motion(unicycle_configuration, control_input, sampling_interval)
+function [unicycle_configuration, unicycle_velocity] = simulate_unicycle_motion(unicycle_configuration, control_input, sampling_interval)
     %unicycle_configuration = euler_integration(unicycle_configuration, control_input, sampling_interval);
 
     x = unicycle_configuration(1);
@@ -19,4 +19,9 @@ function unicycle_configuration= simulate_unicycle_motion(unicycle_configuration
         unicycle_configuration(2) = y - driving_velocity / steering_velocity * (cos(theta_next) - cos(theta));
         unicycle_configuration(3) = theta_next;
     end
+
+    unicycle_velocity = zeros(3, 1);
+    unicycle_velocity(1) = (unicycle_configuration(1) - x) / sampling_interval;
+    unicycle_velocity(2) = (unicycle_configuration(2) - y) / sampling_interval;
+    unicycle_velocity(3) = wrapToPi(unicycle_configuration(3) - theta) / sampling_interval;
 end

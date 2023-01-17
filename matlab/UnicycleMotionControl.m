@@ -9,6 +9,7 @@ num_unicycles_to_draw = 20;
 
 % Initial configuration of the unicycle:
 unicycle_configuration = zeros(3, 1); % [m], [m], [rad]
+unicycle_velocity = zeros(3, 1);
 
 % Circular trajectory hparams:
 circular_trajectory_center = [4.0; 4.0]; % [m]
@@ -52,9 +53,24 @@ approximate_linearization_controller = ApproximateLinearizationController( ...
     approximate_linearization_controller_a ...
 );
 
+% Dynamic feedback linearization controller hparams:
+dynamic_feedback_linearization_controller_kp1 = 4.0;
+dynamic_feedback_linearization_controller_kp2 = 4.0;
+dynamic_feedback_linearization_controller_kd1 = 4.0;
+dynamic_feedback_linearization_controller_kd2 = 4.0;
+dynamic_feedback_linearization_controller_xi_0 = 1.0;
+dynamic_feedback_linearization_controller = DynamicFeedbackLinearizationController( ...
+    dynamic_feedback_linearization_controller_kp1, ...
+    dynamic_feedback_linearization_controller_kp2, ...
+    dynamic_feedback_linearization_controller_kd1, ...
+    dynamic_feedback_linearization_controller_kd2, ...
+    sampling_interval, ...
+    dynamic_feedback_linearization_controller_xi_0 ...
+);
+
 % Desired trajectory and controller:
-desired_trajectory_type = TrajectoryType.Circular; % Circular, EightShaped, Squared
-controller_type = ControllerType.ApproximateLinearization; % ApproximateLinearization
+desired_trajectory_type = TrajectoryType.Squared; % Circular, EightShaped, Squared
+controller_type = ControllerType.DynamicFeedbackLinearization; % ApproximateLinearization, DynamicFeedbackLinearization
 
 switch desired_trajectory_type
     case TrajectoryType.Circular
@@ -83,6 +99,8 @@ for iter = 1:iterations
     switch controller_type
         case ControllerType.ApproximateLinearization
             control_input = approximate_linearization_controller.compute_commands(time(iter), unicycle_configuration, desired_trajectory);
+        case ControllerType.DynamicFeedbackLinearization
+            control_input = dynamic_feedback_linearization_controller.compute_commands(time(iter), unicycle_configuration, unicycle_velocity, desired_trajectory);
         otherwise
             disp('Controller must be of the type ApproximateLinearization.');
     end
@@ -96,7 +114,7 @@ for iter = 1:iterations
     tracking_error_log(iter, 1) = norm(unicycle_configuration_ref(1:2) - unicycle_configuration(1:2));
 
     % Simulation step:
-    unicycle_configuration = simulate_unicycle_motion(unicycle_configuration, control_input, sampling_interval);
+    [unicycle_configuration, unicycle_velocity] = simulate_unicycle_motion(unicycle_configuration, control_input, sampling_interval);
 end
 
 % Draw unicycle given the trajectory:
