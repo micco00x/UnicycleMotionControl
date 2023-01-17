@@ -114,7 +114,7 @@ for iter = 1:iterations
         case ControllerType.StaticFeedbackLinearization
             control_input = static_feedback_linearization_controller.compute_commands(time(iter), unicycle_configuration, desired_trajectory);
         otherwise
-            disp('Controller must be of the type ApproximateLinearization.');
+            disp('Controller must be of the type ApproximateLinearization, DynamicFeedbackLinearization or StaticFeedbackLinearization.');
     end
 
     [unicycle_configuration_ref, ~, ~] = desired_trajectory.eval(time(iter));
