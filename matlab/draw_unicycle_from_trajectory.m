@@ -12,7 +12,8 @@ function  draw_unicycle_from_trajectory(unicycle_configurations, num_unicycles_t
     end
     
     % Add trajectory:
-    plot(x(iters_to_draw), y(iters_to_draw), 'Color', color, 'LineStyle', ':');
+    %plot(x(iters_to_draw), y(iters_to_draw), 'Color', color, 'LineStyle', ':');
+    plot(x, y, 'Color', color, 'LineStyle', ':');
     grid on
 
     daspect([1, 1, 1]);
