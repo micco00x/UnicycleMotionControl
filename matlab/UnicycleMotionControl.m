@@ -8,7 +8,7 @@ sampling_interval = 0.01; % [s]
 num_unicycles_to_draw = 20;
 
 % Initial configuration of the unicycle:
-unicycle_configuration = zeros(3, 1); % [m], [m], [rad]
+unicycle_configuration = [1.0; 0.0; 0.0]; % [m], [m], [rad]
 unicycle_velocity = zeros(3, 1);
 
 % Circular trajectory hparams:
@@ -133,7 +133,8 @@ end
 figure
 draw_unicycle_from_trajectory(unicycle_configuration_log, num_unicycles_to_draw, 'black');
 hold on
-draw_unicycle_from_trajectory(unicycle_configuration_ref_log, num_unicycles_to_draw, 'green');
+%draw_unicycle_from_trajectory(unicycle_configuration_ref_log, num_unicycles_to_draw, 'green');
+plot(unicycle_configuration_ref_log(:, 1), unicycle_configuration_ref_log(:, 2), 'Color', 'black', 'LineStyle', ':');
 
 % Plot commands:
 figure;
