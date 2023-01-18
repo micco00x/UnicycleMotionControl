@@ -82,6 +82,10 @@ static_feedback_linearization_controller = StaticFeedbackLinearizationController
 desired_trajectory_type = TrajectoryType.Squared; % Circular, EightShaped, Squared
 controller_type = ControllerType.StaticFeedbackLinearization; % ApproximateLinearization, DynamicFeedbackLinearization, StaticFeedbackLinearization
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% DO NOT MODIFY ANYTHING BELOW UNLESS YOU KNOW WHAT YOU ARE DOING %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 switch desired_trajectory_type
     case TrajectoryType.Circular
         desired_trajectory = circular_trajectory;
@@ -91,6 +95,18 @@ switch desired_trajectory_type
         desired_trajectory = squared_trajectory;
     otherwise
         disp('Trajectory must be of the type Circular, EightShaped or Squared.')
+        return;
+end
+
+switch controller_type
+    case ControllerType.ApproximateLinearization
+        trajectory_tracking_controller = approximate_linearization_controller;
+    case ControllerType.DynamicFeedbackLinearization
+        trajectory_tracking_controller = dynamic_feedback_linearization_controller;
+    case ControllerType.StaticFeedbackLinearization
+        trajectory_tracking_controller = static_feedback_linearization_controller;
+    otherwise
+        disp('Controller must be of the type ApproximateLinearization, DynamicFeedbackLinearization or StaticFeedbackLinearization.');
         return;
 end
 
@@ -108,20 +124,10 @@ tracking_error_log = zeros(iterations, 1);
 % Run simulation:
 for iter = 1:iterations
     % Compute commands using selected controller:
-    switch controller_type
-        case ControllerType.ApproximateLinearization
-            control_input = approximate_linearization_controller.compute_commands(time(iter), unicycle_configuration, desired_trajectory);
-        case ControllerType.DynamicFeedbackLinearization
-            control_input = dynamic_feedback_linearization_controller.compute_commands(time(iter), unicycle_configuration, unicycle_velocity, desired_trajectory);
-        case ControllerType.StaticFeedbackLinearization
-            control_input = static_feedback_linearization_controller.compute_commands(time(iter), unicycle_configuration, desired_trajectory);
-        otherwise
-            disp('Controller must be of the type ApproximateLinearization, DynamicFeedbackLinearization or StaticFeedbackLinearization.');
-    end
-
-    [unicycle_configuration_ref, unicycle_velocity_ref, ~] = desired_trajectory.eval(time(iter));
+    control_input = trajectory_tracking_controller.compute_commands(time(iter), unicycle_configuration, unicycle_velocity, desired_trajectory);
 
     % Log:
+    [unicycle_configuration_ref, unicycle_velocity_ref, ~] = desired_trajectory.eval(time(iter));
     unicycle_configuration_log(iter, :) = unicycle_configuration;
     unicycle_configuration_ref_log(iter, :) = unicycle_configuration_ref;
     unicycle_velocity_log(iter, :) = unicycle_velocity;

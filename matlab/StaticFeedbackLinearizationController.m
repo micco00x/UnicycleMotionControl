@@ -10,7 +10,7 @@ classdef StaticFeedbackLinearizationController
             obj.k2 = k2;
         end
         
-        function commands = compute_commands(obj, time, unicycle_configuration, desired_trajectory)
+        function commands = compute_commands(obj, time, unicycle_configuration, ~, desired_trajectory)
             [desired_pose, desired_pose_derivative, ~] = desired_trajectory.eval(time);
             
             xd = desired_pose(1);

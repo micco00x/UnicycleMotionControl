@@ -10,7 +10,7 @@ classdef ApproximateLinearizationController
             obj.a = a;
         end
         
-        function commands = compute_commands(obj, time, unicycle_configuration, desired_trajectory)
+        function commands = compute_commands(obj, time, unicycle_configuration, ~, desired_trajectory)
             x = unicycle_configuration(1);
             y = unicycle_configuration(2);
             theta = unicycle_configuration(3);
