@@ -79,36 +79,14 @@ static_feedback_linearization_controller = StaticFeedbackLinearizationController
 );
 
 % Desired trajectory and controller:
-desired_trajectory_type = TrajectoryType.Squared; % Circular, EightShaped, Squared
-controller_type = ControllerType.StaticFeedbackLinearization; % ApproximateLinearization, DynamicFeedbackLinearization, StaticFeedbackLinearization
+% circular_trajectory, eight_shaped_trajectory, squared_trajectory
+desired_trajectory = squared_trajectory;
+ % approximate_linearization_controller, dynamic_feedback_linearization_controller, static_feedback_linearization_controller
+trajectory_tracking_controller = static_feedback_linearization_controller;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% DO NOT MODIFY ANYTHING BELOW UNLESS YOU KNOW WHAT YOU ARE DOING %%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-switch desired_trajectory_type
-    case TrajectoryType.Circular
-        desired_trajectory = circular_trajectory;
-    case TrajectoryType.EightShaped
-        desired_trajectory = eight_shaped_trajectory;
-    case TrajectoryType.Squared
-        desired_trajectory = squared_trajectory;
-    otherwise
-        disp('Trajectory must be of the type Circular, EightShaped or Squared.')
-        return;
-end
-
-switch controller_type
-    case ControllerType.ApproximateLinearization
-        trajectory_tracking_controller = approximate_linearization_controller;
-    case ControllerType.DynamicFeedbackLinearization
-        trajectory_tracking_controller = dynamic_feedback_linearization_controller;
-    case ControllerType.StaticFeedbackLinearization
-        trajectory_tracking_controller = static_feedback_linearization_controller;
-    otherwise
-        disp('Controller must be of the type ApproximateLinearization, DynamicFeedbackLinearization or StaticFeedbackLinearization.');
-        return;
-end
 
 iterations = fix(desired_trajectory.duration / sampling_interval);
 
