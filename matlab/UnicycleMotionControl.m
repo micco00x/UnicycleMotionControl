@@ -16,7 +16,7 @@ circular_trajectory_center = [4.0; 4.0]; % [m]
 circular_trajectory_radius = 3.0; % [m]
 circular_trajectory_desired_driving_velocity = 1.0; % [m/s]
 circular_trajectory_phi = -pi / 2.0; % [rad]
-circular_trajectory_duration = 2.0 * pi * circular_trajectory_radius * circular_trajectory_desired_driving_velocity; % [s]
+circular_trajectory_duration = 2.0 * pi * circular_trajectory_radius / circular_trajectory_desired_driving_velocity; % [s]
 circular_trajectory = CircularTrajectory( ...
     circular_trajectory_center, ...
     circular_trajectory_radius, ...
@@ -100,6 +100,8 @@ iterations = fix(desired_trajectory.duration / sampling_interval);
 time = linspace(0.0, iterations * sampling_interval, iterations);
 unicycle_configuration_log = zeros(iterations, 3);
 unicycle_configuration_ref_log = zeros(iterations, 3);
+unicycle_velocity_log = zeros(iterations, 3);
+unicycle_velocity_ref_log = zeros(iterations, 3);
 control_input_log = zeros(iterations, 2);
 tracking_error_log = zeros(iterations, 1);
 
@@ -117,16 +119,19 @@ for iter = 1:iterations
             disp('Controller must be of the type ApproximateLinearization, DynamicFeedbackLinearization or StaticFeedbackLinearization.');
     end
 
-    [unicycle_configuration_ref, ~, ~] = desired_trajectory.eval(time(iter));
+    [unicycle_configuration_ref, unicycle_velocity_ref, ~] = desired_trajectory.eval(time(iter));
 
     % Log:
     unicycle_configuration_log(iter, :) = unicycle_configuration;
     unicycle_configuration_ref_log(iter, :) = unicycle_configuration_ref;
+    unicycle_velocity_log(iter, :) = unicycle_velocity;
+    unicycle_velocity_ref_log(iter, :) = unicycle_velocity_ref;
     control_input_log(iter, :) = control_input;
     tracking_error_log(iter, 1) = norm(unicycle_configuration_ref(1:2) - unicycle_configuration(1:2));
 
     % Simulation step:
     [unicycle_configuration, unicycle_velocity] = simulate_unicycle_motion(unicycle_configuration, control_input, sampling_interval);
+
 end
 
 % Draw unicycle given the trajectory:
@@ -158,3 +163,24 @@ grid on;
 title('tracking error norm');
 xlabel('[s]');
 ylabel('[m]');
+
+% Plot unicycle velocities:
+figure;
+subplot(3, 1, 1);
+plot(time, unicycle_velocity_log(:, 1), time, unicycle_velocity_ref_log(:, 1));
+grid on;
+xlabel('[s]');
+ylabel('[m/s]');
+legend('x dot', 'x dot ref');
+subplot(3, 1, 2);
+plot(time, unicycle_velocity_log(:, 2), time, unicycle_velocity_ref_log(:, 2));
+grid on;
+xlabel('[s]');
+ylabel('[m/s]');
+legend('y dot', 'y dot ref');
+subplot(3, 1, 3);
+plot(time, unicycle_velocity_log(:, 3), time, unicycle_velocity_ref_log(:, 3));
+grid on;
+xlabel('[s]');
+ylabel('[rad/s]');
+legend('\theta dot', '\theta dot ref');
