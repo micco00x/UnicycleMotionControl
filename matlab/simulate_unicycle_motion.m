@@ -20,6 +20,8 @@ function [unicycle_configuration, unicycle_velocity] = simulate_unicycle_motion(
         unicycle_configuration(3) = theta_next;
     end
 
+    unicycle_configuration(3) = wrapToPi(unicycle_configuration(3));
+
     unicycle_velocity = zeros(3, 1);
     unicycle_velocity(1) = (unicycle_configuration(1) - x) / sampling_interval;
     unicycle_velocity(2) = (unicycle_configuration(2) - y) / sampling_interval;
