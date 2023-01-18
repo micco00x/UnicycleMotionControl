@@ -164,6 +164,27 @@ title('tracking error norm');
 xlabel('[s]');
 ylabel('[m]');
 
+% Plot unicycle configurations:
+figure;
+subplot(3, 1, 1);
+plot(time, unicycle_configuration_log(:, 1), time, unicycle_configuration_ref_log(:, 1));
+grid on;
+xlabel('[s]');
+ylabel('[m]');
+legend('x', 'x ref');
+subplot(3, 1, 2);
+plot(time, unicycle_configuration_log(:, 2), time, unicycle_configuration_ref_log(:, 2));
+grid on;
+xlabel('[s]');
+ylabel('[m]');
+legend('y', 'y ref');
+subplot(3, 1, 3);
+plot(time, unicycle_configuration_log(:, 3), time, unicycle_configuration_ref_log(:, 3));
+grid on;
+xlabel('[s]');
+ylabel('[rad]');
+legend('\theta', '\theta ref');
+
 % Plot unicycle velocities:
 figure;
 subplot(3, 1, 1);
