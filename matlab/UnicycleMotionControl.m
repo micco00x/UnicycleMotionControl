@@ -12,6 +12,10 @@ unicycle_configuration = [1.0; 0.0; 0.0]; % [m], [m], [rad]
 unicycle_velocity = zeros(3, 1);
 
 % Circular trajectory hparams:
+% NOTE: use radius = 2.0 [m],
+%           desired driving velocity = 8.0 [m/s]
+%           duration = 10.0 [s]
+% for a non-converging example (when using approximate linearization).
 circular_trajectory_center = [4.0; 4.0]; % [m]
 circular_trajectory_radius = 3.0; % [m]
 circular_trajectory_desired_driving_velocity = 1.0; % [m/s]
@@ -47,7 +51,7 @@ squared_trajectory = SquaredTrajectory( ...
 
 % Approximate linearization controller hparams:
 approximate_linearization_controller_zeta = 0.7;
-approximate_linearization_controller_a = 2.0;
+approximate_linearization_controller_a = 1.0;
 approximate_linearization_controller = ApproximateLinearizationController( ...
     approximate_linearization_controller_zeta, ...
     approximate_linearization_controller_a ...
